@@ -18,6 +18,7 @@ SOURCES += \
     tcpsocketmanager.cpp
 
 HEADERS += \
+    Errors.h \
     game.h \
     homepage.h \
     loginpage.h \

@@ -2,7 +2,6 @@
 #include <QFile>
 #include <QMessageBox>
 #include <QDialog>
-#include "Errors.h"
 
 
 void failed_connection(){
