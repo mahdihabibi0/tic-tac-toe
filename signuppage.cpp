@@ -14,26 +14,38 @@ SignupPage::~SignupPage()
     delete ui;
 }
 
+void showMessageBox(QString title , QString Text , QString styleSheet){
+    QMessageBox mes;
+
+    mes.setIcon(QMessageBox::Warning);
+
+    mes.setWindowTitle(title);
+
+    mes.setText(Text);
+
+    mes.setStyleSheet(styleSheet);
+
+    mes.setStandardButtons(QMessageBox::Ok);
+
+    mes.exec();
+}
+
 bool SignupPage::check_inputs(){
     if(ui->usernameInput->text() == "" || ui->passwordInput->text() == "" || ui->emailInput->text() == ""){
         QMessageBox mes;
-        mes.setIcon(QMessageBox::Warning);
-        mes.setWindowTitle("input error");
-        mes.setText("please enter all information");
-        mes.setStyleSheet("color : rgb(255 , 0, 0);");
-        mes.setStandardButtons(QMessageBox::Ok);
-        mes.exec();
+
+        showMessageBox("input error", "please enter all information", "color : rgb(255 , 0, 0);");
+
         return false;
     }
     return true;
 }
 
-
 void SignupPage::on_submitBtn_clicked()
 {
-    if(!check_inputs()){
+    if(!check_inputs())
+
         return;
-    }
 
     QJsonObject userJson;
 
@@ -43,18 +55,25 @@ void SignupPage::on_submitBtn_clicked()
 
     userJson.insert("email" , QJsonValue(ui->emailInput->text()));
 
-    if(emit try_to_signup(userJson)){
-        emit  loginButton_clicked();
+    if(!emit try_to_signup(userJson)){
+        showMessageBox("invalid inputs", "username is not valid", "color : rgb(255 , 0, 0);");
+
+        return;
     }
+    emit  loginButton_clicked();
 }
 
 
 void SignupPage::on_hidePassword_clicked()
 {
     if(ui->passwordInput->echoMode() == QLineEdit::Password)
+
         ui->passwordInput->setEchoMode(QLineEdit::Normal);
+
     else
+
         ui->passwordInput->setEchoMode(QLineEdit::Password);
+
 }
 
 

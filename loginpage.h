@@ -30,6 +30,7 @@ signals:
 
     void login_successfully();
 
+    QJsonObject get_user_information(QString username);
 private:
     bool check_inputs();
 
