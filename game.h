@@ -12,10 +12,11 @@ class Game : public QDialog
     Q_OBJECT
 
 public:
-    Game(QWidget *parent = nullptr);
+    explicit Game(QWidget *parent = nullptr);
     ~Game();
 
 private:
     Ui::Game *ui;
 };
+
 #endif // GAME_H
