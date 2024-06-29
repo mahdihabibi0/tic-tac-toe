@@ -15,8 +15,15 @@ public:
     explicit HomePage(QWidget *parent = nullptr);
     ~HomePage();
 
+private slots:
+
+    void on_startGame_clicked();
+
 private:
     Ui::HomePage *ui;
+signals:
+    bool try_to_start_new_game();
+    void show_game_page();
 };
 
 #endif // HOMEPAGE_H
