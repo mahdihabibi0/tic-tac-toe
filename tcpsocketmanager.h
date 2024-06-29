@@ -11,13 +11,17 @@
 class TCPSocketManager : public QTcpSocket
 {
     Q_OBJECT
+
     QMessageBox waitingForServerConnection;
+
 public:
+
     TCPSocketManager();
 
 private slots:
 
 public slots:
+
     bool try_to_login(QJsonObject &user );
 
     bool try_to_signup(QJsonObject &user);
@@ -26,7 +30,10 @@ public slots:
 
     void connected_to_server();
 
+    QJsonObject get_and_send_user_information(QString userName);
+
 signals:
+
     void server_is_online();
 
 };
