@@ -28,6 +28,8 @@ signals:
 
     bool try_to_login(QJsonObject newUser);
 
+    void login_successfully();
+
 private:
     bool check_inputs();
 

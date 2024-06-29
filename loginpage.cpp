@@ -34,14 +34,12 @@ void LoginPage::on_submitBtn_clicked()
     }
     QJsonObject userJson;
 
-    userJson.insert("process" , QJsonValue("Login"));
-
     userJson.insert("username" , QJsonValue(ui->usernameInput->text()));
 
     userJson.insert("password" , QJsonValue(ui->passwordInput->text()));
 
     if(emit try_to_login(userJson)){
-        //you should handel the error here
+        emit login_successfully();
     }
 }
 

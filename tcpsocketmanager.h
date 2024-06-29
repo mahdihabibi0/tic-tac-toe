@@ -18,9 +18,11 @@ public:
 private slots:
 
 public slots:
-    bool try_to_login(const QJsonObject &user );
+    bool try_to_login(QJsonObject &user );
 
-    bool try_to_signup(const QJsonObject &user);
+    bool try_to_signup(QJsonObject &user);
+
+    bool try_to_start_game();
 
     void connected_to_server();
 

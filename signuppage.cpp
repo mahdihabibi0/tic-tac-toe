@@ -36,7 +36,6 @@ void SignupPage::on_submitBtn_clicked()
     }
 
     QJsonObject userJson;
-    userJson.insert("process" , QJsonValue("Signup"));
 
     userJson.insert("username" , QJsonValue(ui->usernameInput->text()));
 
@@ -45,7 +44,7 @@ void SignupPage::on_submitBtn_clicked()
     userJson.insert("email" , QJsonValue(ui->emailInput->text()));
 
     if(emit try_to_signup(userJson)){
-        //you should handel the error here
+        emit  loginButton_clicked();
     }
 }
 

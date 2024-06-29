@@ -2,7 +2,6 @@
 #include <QFile>
 #include <QMessageBox>
 #include <QDialog>
-#include "Errors.h"
 
 
 void failed_connection(){
@@ -57,8 +56,10 @@ TCPSocketManager::TCPSocketManager() {
 
 }
 
-bool TCPSocketManager::try_to_login(const QJsonObject &user)
+bool TCPSocketManager::try_to_login(QJsonObject &user)
 {
+    user.insert("process" , QJsonValue("Login"));
+
     QJsonDocument doc(user);
 
     QByteArray byteArray = doc.toJson();
@@ -75,8 +76,10 @@ bool TCPSocketManager::try_to_login(const QJsonObject &user)
         return false;
 }
 
-bool TCPSocketManager::try_to_signup(const QJsonObject &user)
+bool TCPSocketManager::try_to_signup(QJsonObject &user)
 {
+    user.insert("process" , QJsonValue("Signup"));
+
     QJsonDocument doc(user);
 
     QByteArray byteArray = doc.toJson();
@@ -97,4 +100,33 @@ void TCPSocketManager::connected_to_server()
 {
     emit server_is_online();
     waitingForServerConnection.close();
+}
+
+bool TCPSocketManager::try_to_start_game(){
+    QJsonObject process;
+
+    process.insert("process" , QJsonValue("Start Game"));
+
+    QJsonDocument doc(process);
+
+    QByteArray byteArray = doc.toJson();
+
+    this->write(byteArray);
+
+    this->waitForReadyRead(-1);
+
+    QJsonDocument document = QJsonDocument::fromJson(this->readAll());
+
+    QJsonObject ipConfigObj = document.object();
+
+    this->connectToHost(ipConfigObj["ipAddress"].toString() , ipConfigObj["port"].toInt());
+
+    this->waitForReadyRead(-1);
+
+    if(this->readAll().toInt())
+    {
+        return true;
+    }
+
+    return false;
 }
