@@ -5,20 +5,33 @@
 
 
 void failed_connection(){
+
     QMessageBox msgBox;
+
     msgBox.setIcon(QMessageBox::Warning);
+
     msgBox.setWindowTitle("Warning");
+
     msgBox.setText("server is ofline");
+
     msgBox.setStandardButtons(QMessageBox::Ok);
+
     msgBox.exec();
+
 }
 
 void waiting_for_connection(QMessageBox& waitingForServerConnection){
+
     waitingForServerConnection.setIcon(QMessageBox::Warning);
+
     waitingForServerConnection.setWindowTitle("Connection Failur");
+
     waitingForServerConnection.setText("wating for server connection");
+
     waitingForServerConnection.setStandardButtons(QMessageBox::Ok);
+
     waitingForServerConnection.exec();
+
 }
 
 TCPSocketManager::TCPSocketManager() {
@@ -26,11 +39,15 @@ TCPSocketManager::TCPSocketManager() {
     QObject::connect(this,SIGNAL(connected()),this,SLOT(connected_to_server()));
 
     QFile serverIpPort;
+
     serverIpPort.setFileName("serveripportaddress.json");
 
     if(!serverIpPort.open(QIODevice::ReadOnly)){
+
         failed_connection();
+
         exit(0);
+
     }
 
     QString jsonContents = serverIpPort.readAll();
@@ -40,8 +57,11 @@ TCPSocketManager::TCPSocketManager() {
     QJsonDocument jsonDoc =QJsonDocument::fromJson(jsonContents.toUtf8());
 
     if(jsonDoc.isNull()){
+
         failed_connection();
+
         exit(0);
+
     }
 
     QJsonObject jsonObj = jsonDoc.object();
@@ -58,6 +78,7 @@ TCPSocketManager::TCPSocketManager() {
 
 bool TCPSocketManager::try_to_login(QJsonObject &user)
 {
+
     user.insert("process" , QJsonValue("Login"));
 
     QJsonDocument doc(user);
@@ -72,12 +93,15 @@ bool TCPSocketManager::try_to_login(QJsonObject &user)
 
     if(answer.toInt())
         return true;
+
     else
         return false;
+
 }
 
 bool TCPSocketManager::try_to_signup(QJsonObject &user)
 {
+
     user.insert("process" , QJsonValue("Signup"));
 
     QJsonDocument doc(user);
@@ -92,17 +116,36 @@ bool TCPSocketManager::try_to_signup(QJsonObject &user)
 
     if(answer.toInt())
         return true;
+
     else
         return false;
+
 }
 
 void TCPSocketManager::connected_to_server()
 {
     emit server_is_online();
+
     waitingForServerConnection.close();
 }
 
+QJsonObject TCPSocketManager::get_and_send_user_information(QString userName)
+{
+
+    this->write(userName.toUtf8());
+
+    waitForReadyRead(-1);
+
+    QJsonDocument userInformationDoc=QJsonDocument::fromJson(this->readAll());
+
+    QJsonObject userInformationObj=userInformationDoc.object();
+
+    return userInformationObj;
+
+}
+
 bool TCPSocketManager::try_to_start_game(){
+
     QJsonObject process;
 
     process.insert("process" , QJsonValue("Start Game"));
