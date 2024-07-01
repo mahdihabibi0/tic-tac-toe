@@ -14,6 +14,8 @@ class TCPSocketManager : public QTcpSocket
 
     QMessageBox waitingForServerConnection;
 
+    QString playerID;//it's can be player1 or player2
+
 public:
 
     TCPSocketManager();
@@ -30,7 +32,13 @@ public slots:
 
     void connected_to_server();
 
+    void log_out();
+
     QJsonObject get_and_send_user_information(QString userName);
+
+    QString player_status();
+
+    bool waiting_for_player2_connection();
 
 signals:
 

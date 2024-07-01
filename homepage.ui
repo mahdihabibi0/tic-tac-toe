@@ -65,6 +65,58 @@
     <string>Score :</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="gameHistory">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>200</y>
+     <width>141</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>GAME HISTORY</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="logOut">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>308</y>
+     <width>141</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>LOG OUT</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="userName">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>10</y>
+     <width>91</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="userScore">
+   <property name="geometry">
+    <rect>
+     <x>462</x>
+     <y>9</y>
+     <width>81</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
