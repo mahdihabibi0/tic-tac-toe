@@ -16,7 +16,7 @@ LoginPage::~LoginPage()
     delete ui;
 }
 
-void showMessageBox(QString title , QString Text , QString styleSheet){
+void showMessageBoxForLogin(QString title , QString Text , QString styleSheet){
     QMessageBox mes;
 
     mes.setIcon(QMessageBox::Warning);
@@ -35,7 +35,7 @@ void showMessageBox(QString title , QString Text , QString styleSheet){
 bool LoginPage::check_inputs(){
 
     if(ui->usernameInput->text() == "" || ui->passwordInput->text() == ""){
-        showMessageBox("input error", "please enter all information", "color : rgb(255 , 0, 0);");
+        showMessageBoxForLogin("input error", "please enter all information", "color : rgb(255 , 0, 0);");
 
         return false;
     }
@@ -55,7 +55,7 @@ void LoginPage::on_submitBtn_clicked()
 
     if(!emit try_to_login(userJson))
     {
-        showMessageBox("invalide inputs", "username or password is wrong", "color : rgb(255 , 0, 0);");
+        showMessageBoxForLogin("invalide inputs", "username or password is wrong", "color : rgb(255 , 0, 0);");
 
         return;
     }
