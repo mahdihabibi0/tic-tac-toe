@@ -2,6 +2,7 @@
 #include <QFile>
 #include <QMessageBox>
 #include <QDialog>
+#include <QByteArray>
 
 
 void failed_connection(){
@@ -129,6 +130,15 @@ void TCPSocketManager::connected_to_server()
     waitingForServerConnection.close();
 }
 
+void TCPSocketManager::log_out()
+{
+    QJsonObject process;
+    process.insert("process",QJsonValue("logout"));
+    QJsonDocument processDoc(process);
+    QByteArray content = processDoc.toJson();
+    this->write(content);
+}
+
 QJsonObject TCPSocketManager::get_and_send_user_information(QString userName)
 {
 
@@ -142,6 +152,21 @@ QJsonObject TCPSocketManager::get_and_send_user_information(QString userName)
 
     return userInformationObj;
 
+}
+
+QString TCPSocketManager::player_status()
+{
+    return playerID;
+}
+
+bool TCPSocketManager::waiting_for_player2_connection()
+{
+    this->waitForReadyRead(-1);
+    QByteArray answer = this->readAll();
+    if(answer.toInt()==1)
+        return true;
+    else
+        return false;
 }
 
 bool TCPSocketManager::try_to_start_game(){
@@ -164,12 +189,12 @@ bool TCPSocketManager::try_to_start_game(){
 
     this->connectToHost(ipConfigObj["ipAddress"].toString() , ipConfigObj["port"].toInt());
 
+    this->playerID = ipConfigObj["playerStatus"].toString();
+
     this->waitForReadyRead(-1);
 
-    if(this->readAll().toInt())
-    {
-        return true;
-    }
+    if(!this->readAll().toInt())
+        return false;
 
-    return false;
+    return true;
 }
