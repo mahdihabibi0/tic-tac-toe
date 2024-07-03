@@ -1,3 +1,102 @@
 #include "gamebutton.h"
 
-GameButton::GameButton() {}
+#include "multipleanswerquestion.h"
+#include "numbericalanswerquestion.h"
+#include "shortanswerquestion.h"
+
+void GameButton::update_the_button(){
+
+    switch (situation) {
+    case Situation::AnsweredByYou:
+        this->setText("X");
+        this->setEnabled(false);
+        break;
+    case Situation::AnsweredByOpponent:
+        this->setText("O");
+        this->setEnabled(false);
+        break;
+    case Situation::AnsweringByOpponent:
+        this->setText("....");
+        break;
+    case Situation::AnsweringByYou:
+        this->setText("");
+        this->setEnabled(false);
+        break;
+    case Situation::AnsweredFalseByYou:
+        this->setText("");
+        this->setEnabled(false);
+        break;
+    default:
+        this->setText("___");
+        break;
+    }
+
+}
+
+GameButton::GameButton(QWidget* parent):QPushButton(parent) , situation(Situation::Normal) {
+    update_the_button();
+}
+
+void GameButton::setQuestion(QJsonObject Qobj , QuestionMode mode){
+    QString type = Qobj["type"].toString();
+
+    if (type == "short")
+        q = new ShortAnswerQuestion(Qobj , mode);
+
+    else if(type == "multiple")
+        q = new MultipleAnswerQuestion(Qobj , mode);
+
+    else if(type == "number")
+        q = new NumbericalAnswerQuestion(Qobj , mode);
+
+    QObject::connect(q , SIGNAL(skiped_clicked(QuestionType)) , this , SLOT(skiped_clicked_handeler(QuestionType)));
+
+    QObject::connect(q , SIGNAL(answer_true()) , this , SLOT(answer_true_handeler()));
+
+    QObject::connect(q , SIGNAL(answer_false()) , this , SLOT(answer_false_handeler()));
+
+    QObject::connect(this , SIGNAL(clicked(bool)) , this , SLOT(clicked_handeler(bool)));
+}
+
+
+void GameButton::answer_true_handeler(){
+    situation = Situation::AnsweredByYou;
+
+    delete q;
+
+    update_the_button();
+
+    emit answered_true_to_question(this->objectName());
+}
+
+void GameButton::answer_false_handeler(){
+    situation = Situation::AnsweredFalseByYou;
+
+    delete q;
+
+    update_the_button();
+
+    emit answered_false_to_question(this->objectName());
+}
+
+QJsonObject GameButton::skiped_clicked_handeler(QuestionType type){
+    return emit get_new_question(type);
+}
+
+void GameButton::set_button_situation(Situation s){
+    situation = s;
+
+    update_the_button();
+}
+
+void GameButton::clicked_handeler(bool){
+    if(situation == Situation::AnsweringByOpponent)
+        showMessageBoxForQuestion("bad select" , "it is answering\nby your opponent" , "color : rgba(255 , 0 , 0);");
+    else{
+        situation = Situation::AnsweringByYou;
+        update_the_button();
+        q->show();
+        q->setWindowModality(Qt::WindowModal);
+        q->exec();
+    }
+}
