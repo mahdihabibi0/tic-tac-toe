@@ -9,20 +9,30 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    multipleanswerquestion.cpp \
+    numbericalanswerquestion.cpp \
+    question.cpp \
+    gamebutton.cpp \
     homepage.cpp \
     loginpage.cpp \
     lsmanager.cpp \
     main.cpp \
     game.cpp \
+    shortanswerquestion.cpp \
     signuppage.cpp \
     tcpsocketmanager.cpp
 
 HEADERS += \
     Errors.h \
+    multipleanswerquestion.h \
+    numbericalanswerquestion.h \
+    question.h \
     game.h \
+    gamebutton.h \
     homepage.h \
     loginpage.h \
     lsmanager.h \
+    shortanswerquestion.h \
     signuppage.h \
     tcpsocketmanager.h
 
@@ -30,6 +40,9 @@ FORMS += \
     game.ui \
     homepage.ui \
     loginpage.ui \
+    multipleanswerquestion.ui \
+    numbericalanswerquestion.ui \
+    shortanswerquestion.ui \
     signuppage.ui
 
 # Default rules for deployment.

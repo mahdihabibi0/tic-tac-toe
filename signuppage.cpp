@@ -14,7 +14,7 @@ SignupPage::~SignupPage()
     delete ui;
 }
 
-void showMessageBox(QString title , QString Text , QString styleSheet){
+void showMessageBoxForSignup(QString title , QString Text , QString styleSheet){
     QMessageBox mes;
 
     mes.setIcon(QMessageBox::Warning);
@@ -34,7 +34,7 @@ bool SignupPage::check_inputs(){
     if(ui->usernameInput->text() == "" || ui->passwordInput->text() == "" || ui->emailInput->text() == ""){
         QMessageBox mes;
 
-        showMessageBox("input error", "please enter all information", "color : rgb(255 , 0, 0);");
+        showMessageBoxForSignup("input error", "please enter all information", "color : rgb(255 , 0, 0);");
 
         return false;
     }
@@ -56,7 +56,7 @@ void SignupPage::on_submitBtn_clicked()
     userJson.insert("email" , QJsonValue(ui->emailInput->text()));
 
     if(!emit try_to_signup(userJson)){
-        showMessageBox("invalid inputs", "username is not valid", "color : rgb(255 , 0, 0);");
+        showMessageBoxForSignup("invalid inputs", "username is not valid", "color : rgb(255 , 0, 0);");
 
         return;
     }
