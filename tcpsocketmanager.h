@@ -6,7 +6,20 @@
 #include <QJsonValue>
 #include <QJsonArray>
 #include <QMessageBox>
+#include <QMap>
+#include "gamebutton.h"
 
+enum CommandOfSubServer{
+    setButtonToAnsweringByOpponent,
+    setButtonToNormalByOpponent,
+    setButtonToAnsweredByOpponent,
+    startTheGame
+};
+enum ProcessOFSubServer{
+    setButtonToAnsweringByPlayer,
+    setButtonToNormalByPlayer,
+    setButtonToAnsweredByPlayer,
+};
 
 class TCPSocketManager : public QTcpSocket
 {
@@ -14,16 +27,15 @@ class TCPSocketManager : public QTcpSocket
 
     QMessageBox waitingForServerConnection;
 
-    QString playerID;//it's can be player1 or player2
-
 public:
-
     TCPSocketManager();
 
 private slots:
+    void subserver_read_handeler();
+
+    void set_button_situation_handeler(QJsonObject obj , Situation s);
 
 public slots:
-
     bool try_to_login(QJsonObject &user );
 
     bool try_to_signup(QJsonObject &user);
@@ -34,16 +46,24 @@ public slots:
 
     void log_out();
 
-    QJsonObject get_and_send_user_information(QString userName);
+    QJsonObject get_user_information(QString userName);
 
-    QString player_status();
+    void subserver_palayer_answerd_process(int i , int j);
 
-    bool waiting_for_player2_connection();
+    void subserver_player_is_answering_process(int i , int j);
 
+    QJsonObject get_question_by_type(QuestionType type);
 signals:
-
     void server_is_online();
 
+    void set_button_situation(int i,int j,Situation s);
+
+    void startGame();
+
+private:
+    QMap<QString , CommandOfSubServer> commands;
+
+    QMap<QString , ProcessOFSubServer> processes;
 };
 
 #endif // TCPSOCKETMANAGER_H

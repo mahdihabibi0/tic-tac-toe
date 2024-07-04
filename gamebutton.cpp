@@ -66,7 +66,7 @@ void GameButton::answer_true_handeler(){
 
     update_the_button();
 
-    emit answered_true_to_question(this->objectName());
+    emit answered_true_to_question(loc.first , loc.second);
 }
 
 void GameButton::answer_false_handeler(){
@@ -76,7 +76,7 @@ void GameButton::answer_false_handeler(){
 
     update_the_button();
 
-    emit answered_false_to_question(this->objectName());
+    emit answered_false_to_question(loc.first , loc.second);
 }
 
 QJsonObject GameButton::skiped_clicked_handeler(QuestionType type){
@@ -96,7 +96,12 @@ void GameButton::clicked_handeler(bool){
         situation = Situation::AnsweringByYou;
         update_the_button();
         q->show();
-        q->setWindowModality(Qt::WindowModal);
-        q->exec();
+        q->setWindowModality(Qt::ApplicationModal);
+        q->setWindowFlags(q->windowFlags() & ~Qt::WindowCloseButtonHint);
     }
+}
+
+void GameButton::setLoc(int i , int j){
+    loc.first = i;
+    loc.second  = j;
 }
