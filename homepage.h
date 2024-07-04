@@ -20,8 +20,10 @@ class HomePage : public QDialog
 
 public:
     explicit HomePage(QWidget *parent = nullptr);
+
     ~HomePage();
 
+    void start_game();
 private slots:
 
     void on_startGame_clicked();
@@ -39,11 +41,7 @@ signals:
 
     void show_game_page();
 
-    void logOut();
-
-    QString my_status();
-
-    bool waiting_for_player2_connection();
+    void log_out();
 
 };
 

@@ -19,7 +19,11 @@ public:
     GameButton(QWidget* parent = nullptr);
 
     void setQuestion(QJsonObject Qobj , QuestionMode mode);
+
+    void setLoc(int i , int j);
 private:
+    QPair<int , int> loc;
+
     Question* q;
 
     Situation situation;
@@ -28,9 +32,9 @@ private:
 signals:
     QJsonObject get_new_question(QuestionType type);
 
-    void answered_true_to_question(QString objName);
+    void answered_true_to_question(int i , int j);
 
-    void answered_false_to_question(QString objName);
+    void answered_false_to_question(int i , int j);
 public slots:
     void set_button_situation(Situation s);
 private slots:

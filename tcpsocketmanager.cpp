@@ -4,7 +4,36 @@
 #include <QDialog>
 #include <QByteArray>
 
+// usefull funcks
 
+QJsonObject make_process(QString p){
+    QJsonObject process;
+    process.insert("process" , QJsonValue(p));
+    return process;
+}
+
+QJsonObject make_process(const QJsonObject& obj , QString p){
+    QJsonObject process(obj);
+    process.insert("process" , QJsonValue(p));
+    return process;
+}
+
+QByteArray make_json_byte(const QJsonObject& obj){
+    QJsonDocument doc(obj);
+
+    QByteArray byteArray = doc.toJson();
+
+    return byteArray;
+}
+
+QJsonObject make_byte_json(const QByteArray& data){
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(data);
+
+    QJsonObject jsonObj = jsonDoc.object();
+
+    return jsonObj;
+}
+// before connection
 void failed_connection(){
 
     QMessageBox msgBox;
@@ -35,6 +64,14 @@ void waiting_for_connection(QMessageBox& waitingForServerConnection){
 
 }
 
+void TCPSocketManager::connected_to_server()
+{
+    emit server_is_online();
+
+    waitingForServerConnection.close();
+}
+
+// the constructor
 TCPSocketManager::TCPSocketManager() {
 
     QObject::connect(this,SIGNAL(connected()),this,SLOT(connected_to_server()));
@@ -77,16 +114,12 @@ TCPSocketManager::TCPSocketManager() {
 
 }
 
+
 bool TCPSocketManager::try_to_login(QJsonObject &user)
 {
+    QJsonObject process = make_process(user , "Login");
 
-    user.insert("process" , QJsonValue("Login"));
-
-    QJsonDocument doc(user);
-
-    QByteArray byteArray = doc.toJson();
-
-    this->write(byteArray);
+    this->write(make_json_byte(process));
 
     this->waitForReadyRead(-1);
 
@@ -103,13 +136,9 @@ bool TCPSocketManager::try_to_login(QJsonObject &user)
 bool TCPSocketManager::try_to_signup(QJsonObject &user)
 {
 
-    user.insert("process" , QJsonValue("Signup"));
+    QJsonObject process = make_process(user , "Signup");
 
-    QJsonDocument doc(user);
-
-    QByteArray byteArray = doc.toJson();
-
-    this->write(byteArray);
+    this->write(make_json_byte(process));
 
     this->waitForReadyRead(-1);
 
@@ -123,78 +152,115 @@ bool TCPSocketManager::try_to_signup(QJsonObject &user)
 
 }
 
-void TCPSocketManager::connected_to_server()
-{
-    emit server_is_online();
-
-    waitingForServerConnection.close();
-}
-
 void TCPSocketManager::log_out()
 {
-    QJsonObject process;
-    process.insert("process",QJsonValue("logout"));
-    QJsonDocument processDoc(process);
-    QByteArray content = processDoc.toJson();
-    this->write(content);
+    QJsonObject process = make_process("logout");
+
+    this->write(make_json_byte(process));
 }
 
-QJsonObject TCPSocketManager::get_and_send_user_information(QString userName)
+QJsonObject TCPSocketManager::get_user_information(QString userName)
 {
 
-    this->write(userName.toUtf8());
+    QJsonObject process = make_process("Get Information By Username");
+
+    process.insert("username" , QJsonValue(userName));
+
+    this->write(make_json_byte(process));
 
     waitForReadyRead(-1);
 
-    QJsonDocument userInformationDoc=QJsonDocument::fromJson(this->readAll());
+    return make_byte_json(this->readAll());
 
-    QJsonObject userInformationObj=userInformationDoc.object();
-
-    return userInformationObj;
-
-}
-
-QString TCPSocketManager::player_status()
-{
-    return playerID;
-}
-
-bool TCPSocketManager::waiting_for_player2_connection()
-{
-    this->waitForReadyRead(-1);
-    QByteArray answer = this->readAll();
-    if(answer.toInt()==1)
-        return true;
-    else
-        return false;
 }
 
 bool TCPSocketManager::try_to_start_game(){
+    QJsonObject process = make_process("Start Game");
 
-    QJsonObject process;
-
-    process.insert("process" , QJsonValue("Start Game"));
-
-    QJsonDocument doc(process);
-
-    QByteArray byteArray = doc.toJson();
-
-    this->write(byteArray);
+    this->write(make_json_byte(process));
 
     this->waitForReadyRead(-1);
 
-    QJsonDocument document = QJsonDocument::fromJson(this->readAll());
-
-    QJsonObject ipConfigObj = document.object();
+    QJsonObject ipConfigObj = make_byte_json(this->readAll());
 
     this->connectToHost(ipConfigObj["ipAddress"].toString() , ipConfigObj["port"].toInt());
 
-    this->playerID = ipConfigObj["playerStatus"].toString();
-
     this->waitForReadyRead(-1);
 
-    if(!this->readAll().toInt())
-        return false;
+    if(this->readAll().toInt())
+    {
+        QObject::connect(this , SIGNAL(readyRead()) , this , SLOT(subserver_read_handeler()));
+        return true;
+    }
 
-    return true;
+    return false;
+}
+
+// sub server is connected
+void TCPSocketManager::set_button_situation_handeler(QJsonObject obj , Situation s){
+    int i = obj["loc"].toObject()["i"].toInt();
+
+    int j = obj["loc"].toObject()["j"].toInt();
+
+    emit set_button_situation(i , j , s);
+}
+
+void TCPSocketManager::subserver_palayer_answerd_process(int i , int j){
+    QJsonObject process = make_process("Answerd To Question");
+
+    QJsonObject loc;
+
+    loc.insert("i" , QJsonValue(i));
+
+    loc.insert("j" , QJsonValue(j));
+
+    process.insert("loc" , QJsonValue(loc));
+
+    this->write(make_json_byte(process));
+}
+
+void TCPSocketManager::subserver_player_is_answering_process(int i , int j){
+    QJsonObject process = make_process("Answering To Question");
+
+    QJsonObject loc;
+
+    loc.insert("i" , QJsonValue(i));
+
+    loc.insert("j" , QJsonValue(j));
+
+    process.insert("loc" , QJsonValue(loc));
+
+    this->write(make_json_byte(process));
+}
+
+QJsonObject TCPSocketManager::get_question_by_type(QuestionType type){
+    QJsonObject process = make_process("Get New Question By Type");
+
+    process.insert("requestType" , QJsonValue(type));
+
+    this->write(make_json_byte(process));
+}
+
+void TCPSocketManager::subserver_read_handeler(){
+    QJsonObject commandObj = make_byte_json(this->readAll());
+
+    CommandOfSubServer command = commands[commandObj["command"].toString()];
+
+    switch (command) {
+    case CommandOfSubServer::setButtonToAnsweredByOpponent:
+        set_button_situation_handeler(commandObj , Situation::AnsweredByOpponent);
+        break;
+    case CommandOfSubServer::setButtonToNormalByOpponent:
+        set_button_situation_handeler(commandObj , Situation::Normal);
+        break;
+    case CommandOfSubServer::setButtonToAnsweringByOpponent:
+        set_button_situation_handeler(commandObj , Situation::AnsweringByOpponent);
+        break;
+    case CommandOfSubServer::startTheGame:
+        emit startGame();
+        break;
+    default:
+        throw std::exception();
+        break;
+    }
 }
