@@ -154,8 +154,13 @@ bool TCPSocketManager::try_to_signup(QJsonObject &user)
 
 void TCPSocketManager::log_out()
 {
-    QJsonObject process = make_process("logout");
-
+    QFile file("user.h");
+    file.open(QIODevice::ReadOnly);
+    QString content=file.readAll();
+    file.close();
+    QJsonDocument jd=QJsonDocument::fromJson(content.toUtf8());
+    QJsonObject jo = jd.object();
+    QJsonObject process = make_process(jo,"logout");
     this->write(make_json_byte(process));
 }
 
