@@ -20,6 +20,8 @@ public:
 
     void setQuestion(QJsonObject Qobj , QuestionMode mode);
 
+    void set_situation(Situation s);
+
     void setLoc(int i , int j);
 private:
     QPair<int , int> loc;
@@ -35,8 +37,6 @@ signals:
     void answered_true_to_question(int i , int j);
 
     void answered_false_to_question(int i , int j);
-public slots:
-    void set_button_situation(Situation s);
 private slots:
     void answer_true_handeler();
 

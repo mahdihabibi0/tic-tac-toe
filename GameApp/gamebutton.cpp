@@ -58,6 +58,13 @@ void GameButton::setQuestion(QJsonObject Qobj , QuestionMode mode){
     QObject::connect(this , SIGNAL(clicked(bool)) , this , SLOT(clicked_handeler(bool)));
 }
 
+void GameButton::set_situation(Situation s)
+{
+    this->situation = s;
+
+    update_the_button();
+}
+
 
 void GameButton::answer_true_handeler(){
     situation = Situation::AnsweredByYou;
@@ -83,11 +90,7 @@ QJsonObject GameButton::skiped_clicked_handeler(QuestionType type){
     return emit get_new_question(type);
 }
 
-void GameButton::set_button_situation(Situation s){
-    situation = s;
 
-    update_the_button();
-}
 
 void GameButton::clicked_handeler(bool){
     if(situation == Situation::AnsweringByOpponent)

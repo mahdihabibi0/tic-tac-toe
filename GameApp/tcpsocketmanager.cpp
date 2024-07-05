@@ -184,6 +184,12 @@ void make_commands(QMap<QString , CommandOfSubServer>& c){
     c.insert("Start The Game" ,CommandOfSubServer::startTheGame);
 
     c.insert("New Question" ,CommandOfSubServer::newQuestion);
+
+    c.insert("Player Won",CommandOfSubServer::playerWon);
+
+    c.insert("Player Lose",CommandOfSubServer::playerLose);
+
+    c.insert("Game Drawed",CommandOfSubServer::gameِِDrawed);
 }
 
 bool TCPSocketManager::try_to_start_game(){
@@ -288,6 +294,15 @@ void TCPSocketManager::subserver_read_handeler(){
         break;
     case CommandOfSubServer::newQuestion:
         emit new_question_taken(commandObj);
+        break;
+    case CommandOfSubServer::playerWon:
+        emit player_won();
+        break;
+    case CommandOfSubServer::playerLose:
+        emit player_lose();
+        break;
+    case CommandOfSubServer::gameِِDrawed:
+        emit game_drawed();
         break;
     default:
         throw std::exception();
