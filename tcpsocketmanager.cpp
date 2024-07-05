@@ -3,7 +3,7 @@
 #include <QMessageBox>
 #include <QDialog>
 #include <QByteArray>
-
+#include <QSignalSpy>
 // usefull funcks
 
 QJsonObject make_process(QString p){
@@ -174,6 +174,18 @@ QJsonObject TCPSocketManager::get_user_information(QString userName)
 
 }
 
+void make_commands(QMap<QString , CommandOfSubServer>& c){
+    c.insert("Set Button To Answering By Opponent" ,CommandOfSubServer::setButtonToAnsweringByOpponent);
+
+    c.insert("Set Button To Normal By Opponent" ,CommandOfSubServer::setButtonToNormalByOpponent);
+
+    c.insert("Set Button To Answered By Opponent" ,CommandOfSubServer::setButtonToAnsweredByOpponent);
+
+    c.insert("Start The Game" ,CommandOfSubServer::startTheGame);
+
+    c.insert("New Question" ,CommandOfSubServer::newQuestion);
+}
+
 bool TCPSocketManager::try_to_start_game(){
     QJsonObject process = make_process("Start Game");
 
@@ -189,7 +201,10 @@ bool TCPSocketManager::try_to_start_game(){
 
     if(this->readAll().toInt())
     {
+        make_commands(commands);
+
         QObject::connect(this , SIGNAL(readyRead()) , this , SLOT(subserver_read_handeler()));
+
         return true;
     }
 
@@ -239,6 +254,18 @@ QJsonObject TCPSocketManager::get_question_by_type(QuestionType type){
     process.insert("requestType" , QJsonValue(type));
 
     this->write(make_json_byte(process));
+
+    QSignalSpy spy(this, SIGNAL(new_question_taken(QJsonObject)));
+
+    spy.wait(5000); // Wait until the signal fires from subserver_read_handeler
+
+    if (spy.count() > 0) {
+        // Signal was emitted, handle it
+        QList<QVariant> arguments = spy.takeFirst();
+        return arguments.at(0).toJsonObject();
+    } else {
+        throw QException();
+    }
 }
 
 void TCPSocketManager::subserver_read_handeler(){
@@ -258,6 +285,9 @@ void TCPSocketManager::subserver_read_handeler(){
         break;
     case CommandOfSubServer::startTheGame:
         emit startGame();
+        break;
+    case CommandOfSubServer::newQuestion:
+        emit new_question_taken(commandObj);
         break;
     default:
         throw std::exception();

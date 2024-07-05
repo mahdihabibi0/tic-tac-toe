@@ -53,6 +53,8 @@ void NumbericalAnswerQuestion::on_skipBtn_clicked(){
     QJsonObject newQuestion = emit skiped_clicked(QuestionType::Numerical);
 
     set_question_obj(newQuestion);
+
+    this->close();
 }
 
 NumbericalAnswerQuestion::~NumbericalAnswerQuestion(){

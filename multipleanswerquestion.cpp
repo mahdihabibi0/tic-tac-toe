@@ -80,6 +80,8 @@ void MultipleAnswerQuestion::on_skipBtn_clicked()
     QJsonObject newQuestion = emit skiped_clicked(QuestionType::Multiple);
 
     set_question_obj(newQuestion);
+
+    this->close();
 }
 
 void MultipleAnswerQuestion::on_submitBtn_clicked()

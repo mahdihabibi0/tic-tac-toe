@@ -56,6 +56,8 @@ void ShortAnswerQuestion::on_skipBtn_clicked()
     QJsonObject newQuestion = emit skiped_clicked(QuestionType::Short);
 
     set_question_obj(newQuestion);
+
+    this->close();
 }
 
 ShortAnswerQuestion::~ShortAnswerQuestion(){
