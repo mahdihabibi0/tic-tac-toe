@@ -13,12 +13,8 @@ enum CommandOfSubServer{
     setButtonToAnsweringByOpponent,
     setButtonToNormalByOpponent,
     setButtonToAnsweredByOpponent,
-    startTheGame
-};
-enum ProcessOFSubServer{
-    setButtonToAnsweringByPlayer,
-    setButtonToNormalByPlayer,
-    setButtonToAnsweredByPlayer,
+    startTheGame,
+    newQuestion
 };
 
 class TCPSocketManager : public QTcpSocket
@@ -54,6 +50,8 @@ public slots:
 
     QJsonObject get_question_by_type(QuestionType type);
 signals:
+    void new_question_taken(QJsonObject Qobj);
+
     void server_is_online();
 
     void set_button_situation(int i,int j,Situation s);
@@ -63,7 +61,6 @@ signals:
 private:
     QMap<QString , CommandOfSubServer> commands;
 
-    QMap<QString , ProcessOFSubServer> processes;
 };
 
 #endif // TCPSOCKETMANAGER_H

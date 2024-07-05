@@ -1,5 +1,6 @@
 #include "question.h"
 #include <QMessageBox>
+#include <QEvent>
 
 Question::Question(QuestionMode mode):QDialog(nullptr),mode(mode),timer(new QTimer(this)){
 
@@ -39,4 +40,15 @@ void Question::send_time(){
     if(time == 0)
         emit answer_false();
     emit display_timer(time--);
+}
+
+bool Question::eventFilter(QObject* obj, QEvent* event) {
+    if (event->type() == QEvent::Close) {
+
+        timer->stop();
+
+        return true;
+    }
+
+    return Question::eventFilter(obj, event);
 }

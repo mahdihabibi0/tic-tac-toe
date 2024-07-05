@@ -44,6 +44,8 @@ protected:
 
     void showEvent(QShowEvent* event) override;
 
+    bool eventFilter(QObject* obj, QEvent* event) override;
+
     virtual void set_question_obj(QJsonObject Qobj) = 0;
 private:
     QTimer* timer;
