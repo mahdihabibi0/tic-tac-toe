@@ -7,11 +7,13 @@ BaseServer::BaseServer() {
 
     QObject::connect(&gip , SIGNAL(ipAddress(QString)) , this,SLOT(setIp(QString)));
 
+    QObject::connect(&gip , SIGNAL(closeThePage()) , &gip,SLOT(close()));
+
     gip.show();
 
     gip.exec();
 
-    for (int i = 5000; i < 65535; ++i) {
+    for (int i = 5100; i < 5200; ++i) {
         if(this->listen(IP,i)){
             qDebug() << "connected";
 
@@ -24,12 +26,12 @@ BaseServer::BaseServer() {
     QObject::connect(this , SIGNAL(newConnection()) , this , SLOT(new_connection()));
 }
 
-QJsonObject BaseServer::start_game()
+QJsonObject BaseServer::start_game(QString username)
 {
     QJsonObject configOBJ;
 
     for (GameServer* gameserver : gameservers) {
-        if(gameserver->requestForNewConection()){
+        if(gameserver->requestForNewConection(username)){
             configOBJ.insert("ipAddress" , QJsonValue(gameserver->serverAddress().toString()));
 
             configOBJ.insert("port" , QJsonValue((int)gameserver->serverPort()));
@@ -60,7 +62,9 @@ bool BaseServer::setIp(QString ip)
 void BaseServer::new_connection(){
     QTcpSocket* socket = this->nextPendingConnection();
 
-    // SocketManager* sm = new SocketManager(socket);
+    qDebug() << "new server socket : " << socket->localAddress() << " : " << socket->localPort();
 
-    // QObject::connect(sm , SIGNAL(start_game_request()) , this , SLOT(start_game()));
+    SocketManager* sm = new SocketManager(socket);
+
+    QObject::connect(sm , SIGNAL(start_game_request()) , this , SLOT(start_game()));
 }

@@ -75,6 +75,8 @@ DoozeMap::DoozeMap() {
 void DoozeMap::setItemAtPosition(int i, int j, Situation sit)
 {
     map[i][j].sit = sit;
+    checkForWinChance();
+    checkForWin();
 }
 
 void DoozeMap::checkForWin()

@@ -43,15 +43,16 @@ signals:
     void win();
 
     void thereIsNoChanceForWin();
-
 public:
     DoozeMap();
 
     void setItemAtPosition(int i , int j , Situation sit);
-private:
-    void checkForWin();
 
+    bool getChancForWin();
+private:
     void checkForWinChance();
+
+    void checkForWin();
 
     QVector<QVector<mapItem>> map;
 };

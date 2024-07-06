@@ -16,12 +16,14 @@ public:
     ~GetIPpage();
 
 private slots:
-    void on_ipInput_editingFinished();
-
     void on_submitBtn_clicked();
+
+    void on_ipInput_textChanged(const QString &arg1);
 
 signals:
     bool ipAddress(QString ip);
+
+    void closeThePage();
 private:
     Ui::GetIPpage *ui;
 };
