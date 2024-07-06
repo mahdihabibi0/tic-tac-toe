@@ -9,8 +9,9 @@ class GameSocketManager : public QObject
 public:
     GameSocketManager(QTcpSocket* socket);
 private slots:
-
+    void read_handler();
 private:
+    QString username;
     QTcpSocket* socket;
 };
 

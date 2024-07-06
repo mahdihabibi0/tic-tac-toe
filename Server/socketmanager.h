@@ -12,6 +12,8 @@ class SocketManager : public QObject
     Q_OBJECT
 private:
     QTcpSocket* socket;
+
+    QString  username;
 public:
     SocketManager(QTcpSocket*);
 public slots:
@@ -19,7 +21,7 @@ public slots:
 
     void disconnect_handler();
 signals:
-    QJsonObject start_game_request();
+    QJsonObject start_game_request(QString);
 };
 
 #endif // SOCKETMANAGER_H
