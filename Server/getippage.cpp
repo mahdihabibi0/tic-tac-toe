@@ -8,8 +8,6 @@ GetIPpage::GetIPpage(QWidget *parent)
 {
     ui->setupUi(this);
 
-    ui->ipInput->setInputMask("000.000.00.00");
-
     ui->submitBtn->setEnabled(false);
 }
 void show_message_box(QWidget* parent ,QString title , QString Text , QString styleSheet){
@@ -48,7 +46,7 @@ void GetIPpage::on_submitBtn_clicked()
 
 void GetIPpage::on_ipInput_textChanged(const QString &arg1)
 {
-    if (arg1.size() == 13) {
+    if (arg1.size() >= 10) {
         ui->submitBtn->setEnabled(true);
     } else {
         ui->submitBtn->setEnabled(false);
