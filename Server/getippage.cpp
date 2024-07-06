@@ -7,7 +7,10 @@ GetIPpage::GetIPpage(QWidget *parent)
     , ui(new Ui::GetIPpage)
 {
     ui->setupUi(this);
-    ui->ipInput->setInputMask("000.000.000.000.00");
+
+    ui->ipInput->setInputMask("000.000.00.00");
+
+    ui->submitBtn->setEnabled(false);
 }
 void show_message_box(QWidget* parent ,QString title , QString Text , QString styleSheet){
     QMessageBox mes(parent);
@@ -32,23 +35,22 @@ GetIPpage::~GetIPpage()
     delete ui;
 }
 
-void GetIPpage::on_ipInput_editingFinished()
+void GetIPpage::on_submitBtn_clicked()
 {
-    if (ui->ipInput->hasAcceptableInput()) {
-        ui->submitBtn->setEnabled(true);
-    } else {
+    if(emit ipAddress(ui->ipInput->text()))
+        emit closeThePage();
+    else{
+        ui->ipInput->clear();
+        show_message_box(this , "invalide input" , "the ip adress is not corruct" , "color : rgba(255 , 0 , 0)");
         ui->submitBtn->setEnabled(false);
     }
 }
 
-
-void GetIPpage::on_submitBtn_clicked()
+void GetIPpage::on_ipInput_textChanged(const QString &arg1)
 {
-    if(emit ipAddress(ui->ipInput->text()))
-        this->close();
-    else{
-        ui->ipInput->clear();
-        show_message_box(this , "invalide input" , "the ip adress is not corruct" , "color : rgba(255 , 0 , 0)");
+    if (arg1.size() == 13) {
+        ui->submitBtn->setEnabled(true);
+    } else {
         ui->submitBtn->setEnabled(false);
     }
 }

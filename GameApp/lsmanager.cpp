@@ -37,6 +37,8 @@ bool LSManager::try_to_login_by_defult(){
 void LSManager::manage(){
     if(!try_to_login_by_defult())
         open_login_page();
+    else
+        emit l.login_successfully();
 }
 
 void LSManager::open_login_page(){

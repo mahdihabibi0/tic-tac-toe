@@ -12,12 +12,12 @@ class BaseServer :public QTcpServer
 public:
     BaseServer();
 private slots:
-    QJsonObject start_game();
+    QJsonObject start_game(QString);
 
     bool setIp(QString ip);
 
     void new_connection();
-private:
+private:    
     QVector<GameServer*> gameservers;
 
     GetIPpage gip;
