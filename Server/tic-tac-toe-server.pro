@@ -24,7 +24,8 @@ HEADERS += \
     gameserver.h \
     gamesocketmanager.h \
     getippage.h \
-    socketmanager.h
+    socketmanager.h \
+    usersHandler.h
 
 FORMS += \
     getippage.ui
