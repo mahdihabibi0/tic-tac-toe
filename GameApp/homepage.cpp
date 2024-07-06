@@ -31,8 +31,8 @@ QString get_user_name(){
     return get_file_jsonobj("user.json")["username"].toString();
 }
 
-QString get_user_score(){
-    return get_file_jsonobj("user.json")["score"].toString();
+int get_user_score(){
+    return get_file_jsonobj("user.json")["score"].toInt();
 }
 
 HomePage::HomePage(QWidget *parent)
@@ -40,10 +40,6 @@ HomePage::HomePage(QWidget *parent)
     , ui(new Ui::HomePage)
 {
     ui->setupUi(this);
-
-    ui->userName->setText(get_user_name());
-
-    ui->userScore->setText(get_user_score());
 }
 
 HomePage::~HomePage()
@@ -55,6 +51,15 @@ void HomePage::start_game(){
     emit show_game_page();
 
     this->close();
+}
+
+void HomePage::showEvent(QShowEvent *event)
+{
+    ui->userName->setText(get_user_name());
+
+    ui->userScore->setText(QString::number(get_user_score()));
+
+    QDialog::showEvent(event);
 }
 
 void HomePage::on_startGame_clicked()
@@ -90,9 +95,9 @@ QString get_challanger_name(int challangerIndex){
 
     QJsonObject userObj = userDoc.object();
 
-    QJsonArray userArr=userObj["last3games"].toArray();
+    QJsonArray userArr=userObj["last3game"].toArray();
 
-    return userArr[challangerIndex].toObject()["challengerName"].toString();
+    return userArr[challangerIndex].toObject()["challangername"].toString();
 }
 
 QString get_challange_time(int challangeNumber){
@@ -110,9 +115,9 @@ QString get_challange_time(int challangeNumber){
 
     QJsonObject userObj = userDoc.object();
 
-    QJsonArray userArr=userObj["last3games"].toArray();
+    QJsonArray userArr=userObj["last3game"].toArray();
 
-    return userArr[challangeNumber].toObject()["challengeTime"].toString();
+    return userArr[challangeNumber].toObject()["time"].toString();
 }
 
 QString get_challange_situation(int challangeNumber){
@@ -130,45 +135,33 @@ QString get_challange_situation(int challangeNumber){
 
     QJsonObject userObj = userDoc.object();
 
-    QJsonArray userArr=userObj["last3games"].toArray();
+    QJsonArray userArr=userObj["last3game"].toArray();
 
-    return userArr[challangeNumber].toObject()["challengeSituation"].toString();
+    return userArr[challangeNumber].toObject()["situation"].toString();
 }
 
-void create_game_history_page_setting(QDialog &ghp){
-    QWidget *centralwidget;
-
-    QLabel *gameHistory;
-
+void create_game_history_page_setting(QDialog *Dialog){
     QTableWidget *gamesTable;
 
-    ghp.resize(756, 649);
+    if (Dialog->objectName().isEmpty())
+        Dialog->setObjectName("Dialog");
+    Dialog->resize(280, 337);
+    gamesTable = new QTableWidget(Dialog);
+    if (gamesTable->columnCount() < 3)
+        gamesTable->setColumnCount(3);
+    QTableWidgetItem *__qtablewidgetitem = new QTableWidgetItem();
+    __qtablewidgetitem->setText("Challanger Name");
+    gamesTable->setHorizontalHeaderItem(0, __qtablewidgetitem);
+    QTableWidgetItem *__qtablewidgetitem1 = new QTableWidgetItem();
+    __qtablewidgetitem1->setText("Situation");
+    gamesTable->setHorizontalHeaderItem(1, __qtablewidgetitem1);
+    QTableWidgetItem *__qtablewidgetitem2 = new QTableWidgetItem();
+    __qtablewidgetitem2->setText("Time");
+    gamesTable->setHorizontalHeaderItem(2, __qtablewidgetitem2);
+    gamesTable->setObjectName("tableWidget");
+    gamesTable->setGeometry(QRect(0, 0, 401, 341));
 
-    centralwidget = new QWidget(&ghp);
-
-    centralwidget->setObjectName("centralwidget");
-
-    gameHistory = new QLabel(centralwidget);
-
-    gameHistory->setObjectName("gameHistory");
-
-    gameHistory->setGeometry(QRect(320, 80, 111, 81));
-
-    gamesTable = new QTableWidget(centralwidget);
-
-    gamesTable->setObjectName("gamesTable");
-
-    gamesTable->setGeometry(QRect(180, 160, 401, 281));
-
-    gamesTable->setColumnCount(3);
-
-    gamesTable->setRowCount(1);
-
-    gamesTable->item(0,0)->setText("Challenger Name");
-
-    gamesTable->item(0,1)->setText("Situation");
-
-    gamesTable->item(0,2)->setText("Time");
+    Dialog->setWindowTitle("History Table");
 
     int countOfGames = 0;
 
@@ -177,16 +170,15 @@ void create_game_history_page_setting(QDialog &ghp){
         QString challangerName = get_challanger_name(i);
 
         if(challangerName == "")
-
-        continue;
+            continue;
 
         gamesTable->insertRow(countOfGames);
 
-        gamesTable->item(countOfGames,0)->setText(challangerName);
+        gamesTable->setItem(countOfGames,0 , new QTableWidgetItem(challangerName));
 
-        gamesTable->item(countOfGames,1)->setText(get_challange_situation(i));
+        gamesTable->setItem(countOfGames,1 , new QTableWidgetItem(get_challange_situation(i)));
 
-        gamesTable->item(countOfGames,2)->setText(get_challange_time(i));
+        gamesTable->setItem(countOfGames,2 , new QTableWidgetItem(get_challange_time(i)));
 
         countOfGames++;
     }
@@ -197,17 +189,17 @@ void HomePage::on_gameHistory_clicked()
 {
     QDialog gameHistoryPage;
 
-    create_game_history_page_setting(gameHistoryPage);
+    create_game_history_page_setting(&gameHistoryPage);
 
     gameHistoryPage.setWindowModality(Qt::ApplicationModal);
 
-    gameHistoryPage.show();
+    gameHistoryPage.exec();
 }
 
 
 void HomePage::on_logOut_clicked()
 {
-    emit log_out();
+    emit logout();
 
     delete_file_content();
 

@@ -19,8 +19,9 @@ public:
 
 private:
     Ui::Game *ui;
-    void checking_player_win(int i,int j);
+
     QDialog* winnerPage;
+
     void create_dialog(QString);
 
 protected:

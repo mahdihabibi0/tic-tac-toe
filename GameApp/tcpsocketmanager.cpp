@@ -58,7 +58,9 @@ void waiting_for_connection(QMessageBox& waitingForServerConnection){
 
     waitingForServerConnection.setText("wating for server connection");
 
-    waitingForServerConnection.setStandardButtons(QMessageBox::Ok);
+    // waitingForServerConnection.setWindowFlags(Qt::WindowTitleHint | Qt::FramelessWindowHint);
+
+    waitingForServerConnection.setStandardButtons(QMessageBox::NoButton);
 
     waitingForServerConnection.exec();
 
@@ -68,7 +70,7 @@ void TCPSocketManager::connected_to_server()
 {
     emit server_is_online();
 
-    waitingForServerConnection.close();
+    waitingForServerConnection.reject();
 }
 
 // the constructor
@@ -115,7 +117,7 @@ TCPSocketManager::TCPSocketManager() {
 }
 
 
-bool TCPSocketManager::try_to_login(QJsonObject &user)
+bool TCPSocketManager::try_to_login_handler(QJsonObject user)
 {
     QJsonObject process = make_process(user , "Login");
 
@@ -133,7 +135,7 @@ bool TCPSocketManager::try_to_login(QJsonObject &user)
 
 }
 
-bool TCPSocketManager::try_to_signup(QJsonObject &user)
+bool TCPSocketManager::try_to_signup_handler(QJsonObject user)
 {
 
     QJsonObject process = make_process(user , "Signup");
@@ -150,18 +152,6 @@ bool TCPSocketManager::try_to_signup(QJsonObject &user)
     else
         return false;
 
-}
-
-void TCPSocketManager::log_out()
-{
-    QFile file("user.h");
-    file.open(QIODevice::ReadOnly);
-    QString content=file.readAll();
-    file.close();
-    QJsonDocument jd=QJsonDocument::fromJson(content.toUtf8());
-    QJsonObject jo = jd.object();
-    QJsonObject process = make_process(jo,"logout");
-    this->write(make_json_byte(process));
 }
 
 QJsonObject TCPSocketManager::get_user_information(QString userName)

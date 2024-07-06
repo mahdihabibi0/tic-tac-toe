@@ -2,6 +2,7 @@
 #include "QMessageBox"
 #include <QJsonDocument>
 #include <QFile>
+#include <QThread>
 #include "ui_loginpage.h"
 
 LoginPage::LoginPage(QWidget *parent)
@@ -66,14 +67,20 @@ void LoginPage::on_submitBtn_clicked()
 
     QJsonDocument jsonDoc(userJson);
 
-    if(jsonFile.open(QFile::WriteOnly | QFile::Text))
+    if(jsonFile.open(QFile::WriteOnly))
     {
-        jsonFile.write(jsonDoc.toJson());
+        jsonFile.write(QJsonDocument(jsonDoc).toJson(QJsonDocument::Indented));
 
         jsonFile.close();
     }
 
+    ui->passwordInput->clear();
+
+    ui->usernameInput->clear();
+
     emit login_successfully();
+
+    this->close();
 }
 
 

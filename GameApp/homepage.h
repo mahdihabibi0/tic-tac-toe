@@ -24,6 +24,8 @@ public:
     ~HomePage();
 
     void start_game();
+protected:
+    void showEvent(QShowEvent* event) override;
 private slots:
 
     void on_startGame_clicked();
@@ -36,12 +38,11 @@ private:
     Ui::HomePage *ui;
 
 signals:
+    void logout();
 
     bool try_to_start_new_game();
 
     void show_game_page();
-
-    void log_out();
 
 };
 

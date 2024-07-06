@@ -35,15 +35,13 @@ private slots:
     void set_button_situation_handeler(QJsonObject obj , Situation s);
 
 public slots:
-    bool try_to_login(QJsonObject &user );
+    bool try_to_login_handler(QJsonObject user );
 
-    bool try_to_signup(QJsonObject &user);
+    bool try_to_signup_handler(QJsonObject user);
 
     bool try_to_start_game();
 
     void connected_to_server();
-
-    void log_out();
 
     QJsonObject get_user_information(QString userName);
 
