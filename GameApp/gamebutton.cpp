@@ -87,7 +87,9 @@ void GameButton::answer_false_handeler(){
 }
 
 QJsonObject GameButton::skiped_clicked_handeler(QuestionType type){
-    return emit get_new_question(type);
+    QJsonObject res =  emit get_new_question(type);
+    emit set_back_button_to_normal(loc.first , loc.second);
+    return res;
 }
 
 
@@ -98,9 +100,10 @@ void GameButton::clicked_handeler(bool){
     else{
         situation = Situation::AnsweringByYou;
         update_the_button();
-        q->show();
         q->setWindowModality(Qt::ApplicationModal);
         q->setWindowFlags(q->windowFlags() & ~Qt::WindowCloseButtonHint);
+        q->show();
+        emit is_answering_to_question(loc.first , loc.second);
     }
 }
 

@@ -19,6 +19,9 @@ private slots:
 
     void on_skipBtn_clicked();
 
+protected:
+    void showEvent(QShowEvent* event) override;
+
 private:
     QString answer;
 

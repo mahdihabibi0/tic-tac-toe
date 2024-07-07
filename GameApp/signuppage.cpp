@@ -60,6 +60,11 @@ void SignupPage::on_submitBtn_clicked()
 
         return;
     }
+
+    ui->passwordInput->clear();
+
+    ui->usernameInput->clear();
+
     emit  loginButton_clicked();
 }
 

@@ -15,34 +15,10 @@ class Game : public QDialog
 
 public:
     explicit Game(QWidget *parent = nullptr);
+
     ~Game();
 
-private:
-    Ui::Game *ui;
-    void checking_player_win(int i,int j);
-    QDialog* winnerPage;
-    void create_dialog(QString);
-
-protected:
-    void showEvent(QShowEvent *event) override;
-
-signals:
-    QJsonObject get_question(QuestionType);
-
-    QJsonObject get_new_question_from_tcSocket(QuestionType);
-
-    void answered_true(int,int);
-
-    void show_home_page();
-
 public slots:
-
-    QJsonObject get_new_question(QuestionType type);
-
-    void answered_true_to_question_handler(int i , int j);
-
-    QJsonObject get_new_question_handler(QuestionType type);
-
     void set_button_situation(int,int,Situation);
 
     void player_won();
@@ -51,9 +27,44 @@ public slots:
 
     void game_drawed();
 
+    void lock_skip_button();
+private:
+    Ui::Game *ui;
+
+    QDialog* winnerPage;
+
+    void create_dialog(QString);
+
     void play_again_handler();
 
     void back_to_home_handler();
+protected:
+    void showEvent(QShowEvent *event) override;
+
+signals:
+    QJsonObject get_question(QuestionType);
+
+    void answered_true(int,int);
+
+    void answered_false(int,int);
+
+    void is_answering(int,int);
+
+    void show_home_page();
+
+    void set_back_normal(int,int);
+
+private slots:
+
+    QJsonObject get_new_question_handler(QuestionType type);
+
+    void answered_true_to_question_handler(int i , int j);
+
+    void answered_false_to_question_handler(int i,int j);
+
+    void is_answering_to_question_handler(int i,int j);
+
+    void set_back_button_to_normal_handler(int i , int j);
 
 };
 

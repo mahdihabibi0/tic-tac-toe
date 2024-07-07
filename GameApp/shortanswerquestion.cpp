@@ -60,6 +60,12 @@ void ShortAnswerQuestion::on_skipBtn_clicked()
     this->close();
 }
 
+void ShortAnswerQuestion::showEvent(QShowEvent *event)
+{
+    ui->skipBtn->setEnabled(Question::skipButtonActive);
+    Question::showEvent(event);
+}
+
 ShortAnswerQuestion::~ShortAnswerQuestion(){
     delete ui;
 }

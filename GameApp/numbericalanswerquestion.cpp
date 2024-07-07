@@ -57,6 +57,12 @@ void NumbericalAnswerQuestion::on_skipBtn_clicked(){
     this->close();
 }
 
+void NumbericalAnswerQuestion::showEvent(QShowEvent *event)
+{
+    ui->skipBtn->setEnabled(Question::skipButtonActive);
+    Question::showEvent(event);
+}
+
 NumbericalAnswerQuestion::~NumbericalAnswerQuestion(){
     delete ui;
 }

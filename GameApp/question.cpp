@@ -2,8 +2,15 @@
 #include <QMessageBox>
 #include <QEvent>
 
+bool Question::skipButtonActive = true;
+
 Question::Question(QuestionMode mode):QDialog(nullptr),mode(mode),timer(new QTimer(this)){
 
+}
+
+void Question::lock_skip_button()
+{
+    Question::skipButtonActive = false;
 }
 
 void showMessageBoxForQuestion(QString title , QString Text , QString styleSheet){

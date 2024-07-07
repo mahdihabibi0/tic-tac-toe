@@ -35,6 +35,8 @@ signals:
 public:
     Question(QuestionMode mode);
 
+    static void lock_skip_button();
+
     ~Question();
 
 protected:
@@ -42,11 +44,13 @@ protected:
 
     QuestionMode mode;
 
-    void showEvent(QShowEvent* event) override;
+    virtual void showEvent(QShowEvent* event) override;
 
     bool eventFilter(QObject* obj, QEvent* event) override;
 
     virtual void set_question_obj(QJsonObject Qobj) = 0;
+
+    static bool skipButtonActive;
 private:
     QTimer* timer;
 
