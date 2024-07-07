@@ -38,6 +38,8 @@ private:
     Ui::HomePage *ui;
 
 signals:
+    int get_statement(QString username);
+
     void logout();
 
     bool try_to_start_new_game();

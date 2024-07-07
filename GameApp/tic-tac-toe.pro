@@ -22,10 +22,10 @@ SOURCES += \
     game.cpp \
     shortanswerquestion.cpp \
     signuppage.cpp \
-    tcpsocketmanager.cpp
+    tcpsocketmanager.cpp \
+    timer.cpp
 
 HEADERS += \
-    Errors.h \
     getippage.h \
     multipleanswerquestion.h \
     numbericalanswerquestion.h \
@@ -37,7 +37,8 @@ HEADERS += \
     lsmanager.h \
     shortanswerquestion.h \
     signuppage.h \
-    tcpsocketmanager.h
+    tcpsocketmanager.h \
+    timer.h
 
 FORMS += \
     game.ui \

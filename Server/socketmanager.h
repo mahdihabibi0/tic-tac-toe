@@ -21,6 +21,8 @@ public slots:
 
     void disconnect_handler();
 signals:
+    int get_player_statement(QString);
+
     QJsonObject start_game_request(QString);
 };
 

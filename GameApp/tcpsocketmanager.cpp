@@ -190,6 +190,8 @@ bool TCPSocketManager::try_to_start_game(){
 
     QJsonObject ipConfigObj = make_byte_json(this->readAll());
 
+    this->disconnect();
+
     this->connectToHost(ipConfigObj["ipAddress"].toString() , ipConfigObj["port"].toInt());
 
     make_commands(commands);
@@ -291,6 +293,19 @@ QJsonObject TCPSocketManager::get_question_by_type(QuestionType type){
 void TCPSocketManager::close_the_program()
 {
     exit(0);
+}
+
+int TCPSocketManager::get_player_statement(QString username)
+{
+    QJsonObject process = make_process("Get Player Statement");
+
+    process.insert("username" , QJsonValue(username));
+
+    this->write(make_json_byte(process));
+
+    waitForReadyRead(-1);
+
+    return this->readAll().toInt();
 }
 
 void TCPSocketManager::subserver_read_handeler(){
