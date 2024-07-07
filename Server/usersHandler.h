@@ -6,6 +6,27 @@
 #include <QFile>
 #include <QTime>
 
+QString hash(QString pass){
+    QString hashedPass = pass;
+
+    int pbeg = 0; //this attribute go to forward
+    int pend = pass.length() - 1; //this attribute back
+
+    for (int var = 0; var < pass.length() - 1; ++var) {
+        if(var%2 == 0){
+            QChar res((int)pass[pbeg].toLatin1() + (int)pass[pend].toLatin1());
+            hashedPass[pend] = res;
+            pbeg++;
+        }
+        else{
+            QChar res((int)pass[pbeg].toLatin1() + (int)pass[pend].toLatin1());
+            hashedPass[pbeg] = res;
+            pend--;
+        }
+    }
+    return hashedPass;
+}
+
 QJsonObject open_file(){
     QFile file("users.json");
     if(!file.open(QIODevice::ReadOnly)){
@@ -37,7 +58,7 @@ bool try_to_signup(QJsonObject qjo){
 
     addToJsonFile.insert("email",qjo["email"].toString());
 
-    addToJsonFile.insert("password",qjo["password"].toString());
+    addToJsonFile.insert("password",hash(qjo["password"].toString()));
 
     addToJsonFile.insert("score", 0);
 
@@ -74,8 +95,19 @@ bool try_to_signup(QJsonObject qjo){
 
 bool try_to_login(QJsonObject qjo){
     QJsonObject jo = open_file();
+    if(jo.find(qjo["username"].toString())==jo.end())
+        return false;
+    if(jo[qjo["username"].toString()].toObject()["password"].toString()!= hash(qjo["password"].toString()))
+        return false;
 
-    if(jo.find(qjo["username"].toString())==jo.end() || jo[qjo["username"].toString()].toObject()["password"].toString()!=qjo["password"].toString())
+    return true;
+}
+
+bool try_to_default_login(QJsonObject qjo){
+    QJsonObject jo = open_file();
+    if(jo.find(qjo["username"].toString())==jo.end())
+        return false;
+    if(jo[qjo["username"].toString()].toObject()["password"].toString()!= qjo["password"].toString())
         return false;
 
     return true;
