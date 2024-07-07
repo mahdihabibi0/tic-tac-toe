@@ -44,6 +44,13 @@ void SocketManager::read_handler()
         socket->write(make_json_byte(get_user_information(username)));
     }
 
+    if(jsonobj["process"].toString()=="Default Login"){
+        username = jsonobj["username"].toString();
+        if(try_to_default_login(jsonobj))
+            this->socket->write("1");
+        else
+            this->socket->write("0");
+    }
 }
 
 void SocketManager::disconnect_handler()
