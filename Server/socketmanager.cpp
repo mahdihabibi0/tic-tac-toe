@@ -33,7 +33,9 @@ void SocketManager::read_handler()
     }
 
     if(jsonobj["process"].toString()=="Login"){
+
         username = jsonobj["username"].toString();
+
         if(try_to_login(jsonobj))
             this->socket->write("1");
         else

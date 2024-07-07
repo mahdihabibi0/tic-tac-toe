@@ -31,6 +31,16 @@ QJsonObject BaseServer::start_game(QString username)
     QJsonObject configOBJ;
 
     for (GameServer* gameserver : gameservers) {
+        if(gameserver->requestForBackingToGame(username)){
+            configOBJ.insert("ipAddress" , QJsonValue(gameserver->serverAddress().toString()));
+
+            configOBJ.insert("port" , QJsonValue((int)gameserver->serverPort()));
+
+            return configOBJ;
+        }
+    }
+
+    for (GameServer* gameserver : gameservers) {
         if(gameserver->requestForNewConection(username)){
             configOBJ.insert("ipAddress" , QJsonValue(gameserver->serverAddress().toString()));
 

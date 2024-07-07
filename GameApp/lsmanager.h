@@ -25,7 +25,7 @@ private slots:
 
     void open_login_page();
 private:
-    bool try_to_login_by_defult();
+    bool try_to_login_by_default();
 };
 
 #endif // LSMANAGER_H

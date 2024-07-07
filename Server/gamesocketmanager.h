@@ -15,10 +15,11 @@ class GameSocketManager : public QObject
 {
     Q_OBJECT
 public:
-    GameSocketManager(QTcpSocket* socket);
+    GameSocketManager();
 
     bool getChanceForWin();
 
+    bool setSocket(QTcpSocket *socket);
 private slots:
     void read_handler();
 
@@ -45,6 +46,7 @@ signals:
 
     void playerWin(QString name);
 
+    bool username_setted(QString username);
 public slots:
     void challanger_answered_true(QPair<int,int>);
 
