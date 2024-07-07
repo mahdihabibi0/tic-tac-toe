@@ -111,9 +111,9 @@ bool TCPSocketManager::try_to_login_handler(QJsonObject user)
 
 }
 
-bool TCPSocketManager::try_to_defult_login_handler(QJsonObject user)
+bool TCPSocketManager::try_to_default_login_handler(QJsonObject user)
 {
-    QJsonObject process = make_process(user , "Defult Login");
+    QJsonObject process = make_process(user , "Default Login");
 
     this->write(make_json_byte(process));
 
@@ -149,9 +149,6 @@ bool TCPSocketManager::try_to_signup_handler(QJsonObject user)
 
 QJsonObject TCPSocketManager::get_user_information(QString username)
 {
-
-    this->username = username;
-
     QJsonObject process = make_process("Get Information By Username");
 
     process.insert("username" , QJsonValue(username));
@@ -194,10 +191,6 @@ bool TCPSocketManager::try_to_start_game(){
     QJsonObject ipConfigObj = make_byte_json(this->readAll());
 
     this->connectToHost(ipConfigObj["ipAddress"].toString() , ipConfigObj["port"].toInt());
-
-    process["process"] = QJsonValue(QString("Set Username"));
-
-    process.insert("username" , QJsonValue(username));
 
     make_commands(commands);
 

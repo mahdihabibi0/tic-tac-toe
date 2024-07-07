@@ -28,14 +28,23 @@ QJsonObject make_byte_json(const QByteArray& data){
     return jsonObj;
 }
 
-GameSocketManager::GameSocketManager(QTcpSocket *socket):socket(socket) , chanceForWin(true) {
-    QObject::connect(socket,SIGNAL(readyRead()),this,SLOT(read_handler()));
+GameSocketManager::GameSocketManager():chanceForWin(true) {
     QObject::connect(&map , SIGNAL(thereIsNoChanceForWin()) , this , SLOT(thereIsNoChanceForWin_handler()));
 }
 
 bool GameSocketManager::getChanceForWin()
 {
     return this->chanceForWin;
+}
+
+bool GameSocketManager::setSocket(QTcpSocket *socket)
+{
+    if(this->socket)
+        return false;
+
+    this->socket = socket;
+
+    QObject::connect(socket,SIGNAL(readyRead()),this,SLOT(read_handler()));
 }
 
 void GameSocketManager::read_handler()
@@ -65,15 +74,23 @@ void GameSocketManager::read_handler()
     }
     if(jsonobj["process"].toString()=="Set Button Back To Normal"){
         QJsonObject oskipl;
+
         oskipl.insert("command","Skip Button Locked");
+
         socket->write(make_json_byte(oskipl));
+
         emit player_set_button_normal(location);
     }
     if(jsonobj["process"].toString()=="Get New Question By Type"){
 
     }
     if(jsonobj["process"].toString()=="Set Username"){
-        username=jsonobj["username"].toString();
+        if(emit username_setted(username))
+        {
+            delete socket;
+            return;
+        }
+        username = jsonobj["username"].toString();
     }
 
 }

@@ -38,7 +38,7 @@ private slots:
 public slots:
     bool try_to_login_handler(QJsonObject user );
 
-    bool try_to_defult_login_handler(QJsonObject user);
+    bool try_to_default_login_handler(QJsonObject user);
 
     bool try_to_signup_handler(QJsonObject user);
 
@@ -76,8 +76,6 @@ signals:
 
     void lock_skip_button();
 private:
-    QString username;
-
     QMap<QString , CommandOfSubServer> commands;
 
 };

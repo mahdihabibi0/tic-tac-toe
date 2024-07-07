@@ -6,7 +6,7 @@ LSManager::LSManager() {
     QObject::connect(&l , SIGNAL(signupButton_clicked()) , this , SLOT(open_signup_page()));
 }
 
-bool LSManager::try_to_login_by_defult(){
+bool LSManager::try_to_login_by_default(){
     QFile defultUserJsonFile;
 
     defultUserJsonFile.setFileName("user.json");
@@ -35,7 +35,7 @@ bool LSManager::try_to_login_by_defult(){
 }
 
 void LSManager::manage(){
-    if(!try_to_login_by_defult())
+    if(!try_to_login_by_default())
         open_login_page();
     else
         emit l.login_successfully();
