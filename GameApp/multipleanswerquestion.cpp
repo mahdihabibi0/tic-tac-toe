@@ -55,16 +55,16 @@ bool MultipleAnswerQuestion::checkAnswer(){
     switch (correctAnswer) {
     case 0:
         if(ui->answer1RB->isChecked())
-            return true;
+            break;
     case 1:
         if(ui->answer2RB->isChecked())
-            return true;
+            break;
     case 2:
         if(ui->answer3RB->isChecked())
-            return true;
+            break;
     case 3:
         if(ui->answer4RB->isChecked())
-            return true;
+            break;
     default:
         if(ui->answer1RB->isChecked() ||
             ui->answer2RB->isChecked() ||
@@ -73,6 +73,7 @@ bool MultipleAnswerQuestion::checkAnswer(){
             return false;
         throw QException();
     }
+    return true;
 }
 
 void MultipleAnswerQuestion::on_skipBtn_clicked()
@@ -82,6 +83,12 @@ void MultipleAnswerQuestion::on_skipBtn_clicked()
     set_question_obj(newQuestion);
 
     this->close();
+}
+
+void MultipleAnswerQuestion::showEvent(QShowEvent *event)
+{
+    ui->skipBtn->setEnabled(Question::skipButtonActive);
+    Question::showEvent(event);
 }
 
 void MultipleAnswerQuestion::on_submitBtn_clicked()

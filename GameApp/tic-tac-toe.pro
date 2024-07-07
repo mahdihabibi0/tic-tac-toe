@@ -10,6 +10,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    getippage.cpp \
     multipleanswerquestion.cpp \
     numbericalanswerquestion.cpp \
     question.cpp \
@@ -25,6 +26,7 @@ SOURCES += \
 
 HEADERS += \
     Errors.h \
+    getippage.h \
     multipleanswerquestion.h \
     numbericalanswerquestion.h \
     question.h \
@@ -39,6 +41,7 @@ HEADERS += \
 
 FORMS += \
     game.ui \
+    getippage.ui \
     homepage.ui \
     loginpage.ui \
     multipleanswerquestion.ui \

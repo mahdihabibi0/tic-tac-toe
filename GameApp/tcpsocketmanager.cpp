@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QByteArray>
 #include <QSignalSpy>
+#include "getippage.h"
 // usefull funcks
 
 QJsonObject make_process(QString p){
@@ -78,39 +79,14 @@ TCPSocketManager::TCPSocketManager() {
 
     QObject::connect(this,SIGNAL(connected()),this,SLOT(connected_to_server()));
 
-    QFile serverIpPort;
+    GetIpPage gip;
 
-    serverIpPort.setFileName("serveripportaddress.json");
+    QObject::connect(&gip , SIGNAL(rejected()),this,SLOT(close_the_program()));
 
-    if(!serverIpPort.open(QIODevice::ReadOnly)){
+    gip.exec();
 
-        failed_connection();
 
-        exit(0);
-
-    }
-
-    QString jsonContents = serverIpPort.readAll();
-
-    serverIpPort.close();
-
-    QJsonDocument jsonDoc =QJsonDocument::fromJson(jsonContents.toUtf8());
-
-    if(jsonDoc.isNull()){
-
-        failed_connection();
-
-        exit(0);
-
-    }
-
-    QJsonObject jsonObj = jsonDoc.object();
-
-    QJsonValue IPaddress = jsonObj.value("ipAddress");
-
-    QJsonValue Port=jsonObj.value("port");
-
-    this->connectToHost(IPaddress.toString(),Port.toInt());
+    this->connectToHost(gip.get_ip_address(),gip.get_port());
 
     waiting_for_connection(waitingForServerConnection);
 
@@ -135,6 +111,23 @@ bool TCPSocketManager::try_to_login_handler(QJsonObject user)
 
 }
 
+bool TCPSocketManager::try_to_defult_login_handler(QJsonObject user)
+{
+    QJsonObject process = make_process(user , "Defult Login");
+
+    this->write(make_json_byte(process));
+
+    this->waitForReadyRead(-1);
+
+    QByteArray answer = this->readAll();
+
+    if(answer.toInt())
+        return true;
+
+    else
+        return false;
+}
+
 bool TCPSocketManager::try_to_signup_handler(QJsonObject user)
 {
 
@@ -154,12 +147,14 @@ bool TCPSocketManager::try_to_signup_handler(QJsonObject user)
 
 }
 
-QJsonObject TCPSocketManager::get_user_information(QString userName)
+QJsonObject TCPSocketManager::get_user_information(QString username)
 {
+
+    this->username = username;
 
     QJsonObject process = make_process("Get Information By Username");
 
-    process.insert("username" , QJsonValue(userName));
+    process.insert("username" , QJsonValue(username));
 
     this->write(make_json_byte(process));
 
@@ -185,6 +180,8 @@ void make_commands(QMap<QString , CommandOfSubServer>& c){
     c.insert("Player Lose",CommandOfSubServer::playerLose);
 
     c.insert("Game Drawed",CommandOfSubServer::gameِِDrawed);
+
+    c.insert("Skip Button Locked" , CommandOfSubServer::skipButtonLocked);
 }
 
 bool TCPSocketManager::try_to_start_game(){
@@ -198,18 +195,17 @@ bool TCPSocketManager::try_to_start_game(){
 
     this->connectToHost(ipConfigObj["ipAddress"].toString() , ipConfigObj["port"].toInt());
 
-    this->waitForReadyRead(-1);
+    process["process"] = QJsonValue(QString("Set Username"));
 
-    if(this->readAll().toInt())
-    {
-        make_commands(commands);
+    process.insert("username" , QJsonValue(username));
 
-        QObject::connect(this , SIGNAL(readyRead()) , this , SLOT(subserver_read_handeler()));
+    make_commands(commands);
 
-        return true;
-    }
+    this->write(make_json_byte(process));
 
-    return false;
+    QObject::connect(this , SIGNAL(readyRead()) , this , SLOT(subserver_read_handeler()));
+
+    return true;
 }
 
 // sub server is connected
@@ -221,8 +217,23 @@ void TCPSocketManager::set_button_situation_handeler(QJsonObject obj , Situation
     emit set_button_situation(i , j , s);
 }
 
-void TCPSocketManager::subserver_palayer_answerd_process(int i , int j){
-    QJsonObject process = make_process("Answerd To Question");
+void TCPSocketManager::subserver_palayer_answered_true_process(int i , int j){
+    QJsonObject process = make_process("Answered True To Question");
+
+    QJsonObject loc;
+
+    loc.insert("i" , QJsonValue(i));
+
+    loc.insert("j" , QJsonValue(j));
+
+    process.insert("loc" , QJsonValue(loc));
+
+    this->write(make_json_byte(process));
+}
+
+void TCPSocketManager::subserver_palayer_answered_false_process(int i, int j)
+{
+    QJsonObject process = make_process("Answered False To Question");
 
     QJsonObject loc;
 
@@ -237,6 +248,21 @@ void TCPSocketManager::subserver_palayer_answerd_process(int i , int j){
 
 void TCPSocketManager::subserver_player_is_answering_process(int i , int j){
     QJsonObject process = make_process("Answering To Question");
+
+    QJsonObject loc;
+
+    loc.insert("i" , QJsonValue(i));
+
+    loc.insert("j" , QJsonValue(j));
+
+    process.insert("loc" , QJsonValue(loc));
+
+    this->write(make_json_byte(process));
+}
+
+void TCPSocketManager::subserver_player_set_back_to_normal(int i, int j)
+{
+    QJsonObject process = make_process("Set Button Back To Normal");
 
     QJsonObject loc;
 
@@ -269,6 +295,11 @@ QJsonObject TCPSocketManager::get_question_by_type(QuestionType type){
     }
 }
 
+void TCPSocketManager::close_the_program()
+{
+    exit(0);
+}
+
 void TCPSocketManager::subserver_read_handeler(){
     QJsonObject commandObj = make_byte_json(this->readAll());
 
@@ -298,6 +329,9 @@ void TCPSocketManager::subserver_read_handeler(){
         break;
     case CommandOfSubServer::gameِِDrawed:
         emit game_drawed();
+        break;
+    case CommandOfSubServer::skipButtonLocked:
+        emit lock_skip_button();
         break;
     default:
         throw std::exception();

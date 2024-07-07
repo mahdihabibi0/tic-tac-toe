@@ -37,6 +37,10 @@ signals:
     void answered_true_to_question(int i , int j);
 
     void answered_false_to_question(int i , int j);
+
+    void is_answering_to_question(int i, int j);
+
+    void set_back_button_to_normal(int i, int j);
 private slots:
     void answer_true_handeler();
 

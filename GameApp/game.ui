@@ -86,7 +86,7 @@
    </property>
    <layout class="QGridLayout" name="h">
     <item row="1" column="1">
-     <widget class="GameButton" name="btn1_5">
+     <widget class="GameButton" name="btn5">
       <property name="minimumSize">
        <size>
         <width>0</width>
@@ -99,7 +99,7 @@
      </widget>
     </item>
     <item row="1" column="2">
-     <widget class="GameButton" name="btn1_6">
+     <widget class="GameButton" name="btn6">
       <property name="minimumSize">
        <size>
         <width>0</width>
@@ -112,7 +112,7 @@
      </widget>
     </item>
     <item row="1" column="0">
-     <widget class="GameButton" name="btn1_4">
+     <widget class="GameButton" name="btn4">
       <property name="minimumSize">
        <size>
         <width>0</width>
@@ -125,7 +125,7 @@
      </widget>
     </item>
     <item row="0" column="2">
-     <widget class="GameButton" name="btn1_3">
+     <widget class="GameButton" name="btn3">
       <property name="minimumSize">
        <size>
         <width>0</width>
@@ -138,7 +138,7 @@
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="GameButton" name="btn1_2">
+     <widget class="GameButton" name="btn2">
       <property name="minimumSize">
        <size>
         <width>0</width>
@@ -164,7 +164,7 @@
      </widget>
     </item>
     <item row="2" column="0">
-     <widget class="GameButton" name="btn1_7">
+     <widget class="GameButton" name="btn7">
       <property name="minimumSize">
        <size>
         <width>0</width>
@@ -177,7 +177,7 @@
      </widget>
     </item>
     <item row="2" column="1">
-     <widget class="GameButton" name="btn1_8">
+     <widget class="GameButton" name="btn8">
       <property name="minimumSize">
        <size>
         <width>0</width>
@@ -190,7 +190,7 @@
      </widget>
     </item>
     <item row="2" column="2">
-     <widget class="GameButton" name="btn1_9">
+     <widget class="GameButton" name="btn9">
       <property name="minimumSize">
        <size>
         <width>0</width>
