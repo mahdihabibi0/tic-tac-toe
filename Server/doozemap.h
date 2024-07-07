@@ -48,8 +48,9 @@ public:
 
     void setItemAtPosition(int i , int j , Situation sit);
 
-    bool getChancForWin();
 private:
+    bool getChancForWin();
+
     void checkForWinChance();
 
     void checkForWin();

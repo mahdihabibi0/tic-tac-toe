@@ -26,6 +26,15 @@ GameServer::GameServer(QHostAddress ip) :
 
     QObject::connect(&map2 , SIGNAL(thereIsNoChanceForWin()) , this , SLOT(thereIsNoChancePlayer2()));
 
+    QObject::connect(gsm1,SIGNAL(player_answered_true(QJsonObject)),gsm2,SLOT(challanger_answered_true(QJsonObject)));
+
+    QObject::connect(gsm1,SIGNAL(player_answering(QJsonObject)),gsm2,SLOT(challanger_answering(QJsonObject)));
+
+    QObject::connect(gsm1,SIGNAL(player_answering_false(QJsonObject)),gsm2,SLOT(challanger_answered_false(QJsonObject)));
+
+
+
+
 }
 
 bool GameServer::requestForNewConection(QString username)
@@ -48,38 +57,20 @@ bool GameServer::requestForNewConection(QString username)
 
 }
 
-void GameServer::player1Win()
+void GameServer::checkForGameEqualed()
 {
-
+    if(!(gsm1->getChanceForWin() || gsm1->getChanceForWin()))
+        gameFinished = true;
 }
 
-void GameServer::player2Win()
+void GameServer::player1Win(QString name)
 {
-
+    //do some thing
 }
 
-void GameServer::thereIsNoChancePlayer1()
+void GameServer::player2Win(QString name)
 {
-    this->map1Chance = false;
-
-    gameFinished = map1Chance || map2Chance;
-}
-
-void GameServer::thereIsNoChancePlayer2()
-{
-    this->map2Chance = false;
-
-    gameFinished = map1Chance || map2Chance;
-}
-
-void GameServer::setMap1SituationAtPosition(int i, int j, Situation s)
-{
-    map1.setItemAtPosition(i , j , s);
-}
-
-void GameServer::setMap2SituationAtPosition(int i, int j, Situation s)
-{
-    map2.setItemAtPosition(i , j , s);
+    //do some thing
 }
 
 void GameServer::newConnectionHandler()

@@ -96,7 +96,7 @@ void DoozeMap::checkForWinChance()
             if(!check && map[i][j].checkForWinChance())
                 check = true;
 
-    if (check)
+    if (!check)
         emit thereIsNoChanceForWin();
 }
 
