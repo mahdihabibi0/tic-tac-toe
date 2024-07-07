@@ -1,6 +1,8 @@
 #include "homepage.h"
 #include "ui_homepage.h"
 #include <QMdiSubWindow>
+#include "timer.h"
+
 QJsonObject get_file_jsonobj(QString fileName){
     QFile user;
 
@@ -55,6 +57,22 @@ void HomePage::start_game(){
 
 void HomePage::showEvent(QShowEvent *event)
 {
+
+
+    int rem = emit get_statement(get_user_name());
+
+    if(rem)
+        ui->startGame->setText("Continue previous game");
+    else
+        ui->startGame->setText("Start new game");
+
+    Timer* t = new Timer(rem);
+
+    QObject::connect(t , &Timer::time_finished , [&](){
+        ui->startGame->setText("Start new game");
+        delete t;
+    });
+
     ui->userName->setText(get_user_name());
 
     ui->userScore->setText(QString::number(get_user_score()));

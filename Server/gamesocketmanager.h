@@ -27,6 +27,7 @@ private slots:
 
     void win_handler(QString name);
 
+    void disconnected_handler();
 private:
     QString username;
 
@@ -47,6 +48,8 @@ signals:
     void playerWin(QString name);
 
     bool username_setted(QString username);
+
+    void disconnect(QString username);
 public slots:
     void challanger_answered_true(QPair<int,int>);
 

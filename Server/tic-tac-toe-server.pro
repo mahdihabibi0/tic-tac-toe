@@ -16,7 +16,8 @@ SOURCES += \
     gamesocketmanager.cpp \
     getippage.cpp \
     main.cpp \
-    socketmanager.cpp
+    socketmanager.cpp \
+    timer.cpp
 
 HEADERS += \
     baseserver.h \
@@ -25,6 +26,7 @@ HEADERS += \
     gamesocketmanager.h \
     getippage.h \
     socketmanager.h \
+    timer.h \
     usersHandler.h
 
 FORMS += \

@@ -21,18 +21,19 @@ void SocketManager::read_handler()
 
     QJsonObject jsonobj = jsonDoc.object();
 
-    if(jsonobj["process"].toString()=="Start Game"){
+    QString process = jsonobj["process"].toString();
+    if(process =="Start Game"){
         socket->write(make_json_byte(emit start_game_request(username)));
     }
 
-    if(jsonobj["process"].toString()=="Signup"){
+    else if(process=="Signup"){
         if(try_to_signup(jsonobj))
             this->socket->write("1");
         else
             this->socket->write("0");
     }
 
-    if(jsonobj["process"].toString()=="Login"){
+    else if(process=="Login"){
 
         username = jsonobj["username"].toString();
 
@@ -42,16 +43,30 @@ void SocketManager::read_handler()
             this->socket->write("0");
     }
 
-    if(jsonobj["process"].toString()=="Get Information By Username"){
+    else if(process=="Get Information By Username"){
         socket->write(make_json_byte(get_user_information(username)));
     }
 
-    if(jsonobj["process"].toString()=="Default Login"){
+    else if(process=="Default Login"){
         username = jsonobj["username"].toString();
+        int res;
         if(try_to_default_login(jsonobj))
-            this->socket->write("1");
+            res = 1;
         else
-            this->socket->write("0");
+            res = 0;
+
+        QByteArray intData(reinterpret_cast<const char*>(&res), sizeof(res));
+
+        socket->write(intData);
+
+
+    }
+    if(process=="Get Player Statement"){
+        int res = emit get_player_statement(jsonobj[username].toString());
+
+        QByteArray intData(reinterpret_cast<const char*>(&res), sizeof(res));
+
+        socket->write(intData);
     }
 }
 

@@ -59,6 +59,9 @@ public slots:
     QJsonObject get_question_by_type(QuestionType type);
 
     void close_the_program();
+
+    int get_player_statement(QString username);
+
 signals:
     void new_question_taken(QJsonObject Qobj);
 

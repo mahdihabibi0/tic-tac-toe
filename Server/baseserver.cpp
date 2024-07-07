@@ -12,16 +12,17 @@ BaseServer::BaseServer() {
     gip.show();
 
     gip.exec();
+}
 
+void BaseServer::start()
+{
     for (int i = 5100; i < 5200; ++i) {
         if(this->listen(IP,i)){
-            qDebug() << "connected";
+            qDebug() << "base server created : " <<this->serverAddress() << " : " << this->serverPort();
 
             break;
         }
     }
-
-    qDebug() << "base server created : " <<this->serverAddress() << " : " << this->serverPort();
 
     QObject::connect(this , SIGNAL(newConnection()) , this , SLOT(new_connection()));
 }
@@ -75,6 +76,15 @@ void BaseServer::new_connection(){
     qDebug() << "new server socket : " << socket->localAddress() << " : " << socket->localPort();
 
     SocketManager* sm = new SocketManager(socket);
+
+    QObject::connect(sm , &SocketManager::get_player_statement , [&](QString username)->int{
+        for (auto game : gameservers) {
+            int res = game->request_for_rem_time_of_game(username);
+            if(res)
+                return res;
+        }
+        return 0;
+    })
 
     QObject::connect(sm , SIGNAL(start_game_request()) , this , SLOT(start_game()));
 }

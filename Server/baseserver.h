@@ -11,6 +11,8 @@ class BaseServer :public QTcpServer
     Q_OBJECT
 public:
     BaseServer();
+
+    void start();
 private slots:
     QJsonObject start_game(QString);
 

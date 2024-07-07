@@ -45,6 +45,8 @@ bool GameSocketManager::setSocket(QTcpSocket *socket)
     this->socket = socket;
 
     QObject::connect(socket,SIGNAL(readyRead()),this,SLOT(read_handler()));
+
+    QObject::connect(socket , SIGNAL(disconnected()) , this , SLOT(disconnected_handler()));
 }
 
 void GameSocketManager::read_handler()
@@ -105,6 +107,11 @@ void GameSocketManager::thereIsNoChanceForWin_handler()
 void GameSocketManager::win_handler(QString name)
 {
     emit playerWin(name);
+}
+
+void GameSocketManager::disconnected_handler()
+{
+    emit disconnect(username);
 }
 
 void GameSocketManager::challanger_answered_true(QPair<int,int> loc)
