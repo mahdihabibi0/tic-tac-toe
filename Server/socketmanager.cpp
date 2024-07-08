@@ -1,7 +1,7 @@
 #include "socketmanager.h"
 #include "usersHandler.h"
 
-QByteArray make_json_byte(const QJsonObject& obj){
+QByteArray make_json_byte_for(const QJsonObject& obj){
     QJsonDocument doc(obj);
 
     QByteArray byteArray = doc.toJson();
@@ -23,7 +23,7 @@ void SocketManager::read_handler()
 
     QString process = jsonobj["process"].toString();
     if(process =="Start Game"){
-        socket->write(make_json_byte(emit start_game_request(username)));
+        socket->write(make_json_byte_for(emit start_game_request(username)));
     }
 
     else if(process=="Signup"){
@@ -44,22 +44,16 @@ void SocketManager::read_handler()
     }
 
     else if(process=="Get Information By Username"){
-        socket->write(make_json_byte(get_user_information(username)));
+        socket->write(make_json_byte_for(get_user_information(username)));
     }
 
     else if(process=="Default Login"){
         username = jsonobj["username"].toString();
-        int res;
+
         if(try_to_default_login(jsonobj))
-            res = 1;
+            this->socket->write("1");
         else
-            res = 0;
-
-        QByteArray intData(reinterpret_cast<const char*>(&res), sizeof(res));
-
-        socket->write(intData);
-
-
+            this->socket->write("0");
     }
     if(process=="Get Player Statement"){
         int res = emit get_player_statement(jsonobj[username].toString());

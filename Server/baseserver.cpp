@@ -7,7 +7,11 @@ BaseServer::BaseServer() {
 
     QObject::connect(&gip , SIGNAL(ipAddress(QString)) , this,SLOT(setIp(QString)));
 
-    QObject::connect(&gip , SIGNAL(closeThePage()) , &gip,SLOT(close()));
+    QObject::connect(&gip , SIGNAL(closeThePage()) , &gip,SLOT(hide()));
+
+    QObject::connect(&gip , &GetIPpage::finished , [&](){
+        exit(0);
+    });
 
     gip.show();
 
@@ -27,7 +31,7 @@ void BaseServer::start()
     QObject::connect(this , SIGNAL(newConnection()) , this , SLOT(new_connection()));
 }
 
-QJsonObject BaseServer::start_game(QString username)
+QJsonObject BaseServer::start_game_requested(QString username)
 {
     QJsonObject configOBJ;
 
@@ -59,6 +63,8 @@ QJsonObject BaseServer::start_game(QString username)
 
     gameservers.push_back(gs);
 
+    gs->addToWaiters(username);
+
     return configOBJ;
 }
 
@@ -84,7 +90,7 @@ void BaseServer::new_connection(){
                 return res;
         }
         return 0;
-    })
+    });
 
-    QObject::connect(sm , SIGNAL(start_game_request()) , this , SLOT(start_game()));
+    QObject::connect(sm , SIGNAL(start_game_request(QString)) , this , SLOT(start_game_requested(QString)));
 }
