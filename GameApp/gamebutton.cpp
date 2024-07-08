@@ -49,7 +49,7 @@ void GameButton::setQuestion(QJsonObject Qobj , QuestionMode mode){
     else if(type == "number")
         q = new NumbericalAnswerQuestion(Qobj , mode);
 
-    QObject::connect(q , SIGNAL(skiped_clicked(QuestionType)) , this , SLOT(skiped_clicked_handeler(QuestionType)));
+    QObject::connect(q , SIGNAL(skiped_clicked()) , this , SLOT(skiped_clicked_handeler()));
 
     QObject::connect(q , SIGNAL(answer_true()) , this , SLOT(answer_true_handeler()));
 
@@ -86,10 +86,8 @@ void GameButton::answer_false_handeler(){
     emit answered_false_to_question(loc.first , loc.second);
 }
 
-QJsonObject GameButton::skiped_clicked_handeler(QuestionType type){
-    QJsonObject res =  emit get_new_question(type);
+void GameButton::skiped_clicked_handeler(){
     emit set_back_button_to_normal(loc.first , loc.second);
-    return res;
 }
 
 
@@ -100,6 +98,7 @@ void GameButton::clicked_handeler(bool){
     else{
         situation = Situation::AnsweringByYou;
         update_the_button();
+        this->setQuestion(emit get_new_question(typeOfQuestion) , modeOfQuestion);
         q->setWindowModality(Qt::ApplicationModal);
         q->setWindowFlags(q->windowFlags() & ~Qt::WindowCloseButtonHint);
         q->show();
@@ -110,4 +109,11 @@ void GameButton::clicked_handeler(bool){
 void GameButton::setLoc(int i , int j){
     loc.first = i;
     loc.second  = j;
+}
+
+void GameButton::setUpButtonQuestion(QuestionType type, QuestionMode mode)
+{
+    typeOfQuestion = type;
+
+    modeOfQuestion = mode;
 }

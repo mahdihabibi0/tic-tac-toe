@@ -5,7 +5,7 @@
 #include <QDialog>
 #include <QJsonObject>
 #include <QJsonArray>
-#include <QTimer>
+#include "timer.h"
 
 enum QuestionMode{
     normal,
@@ -31,17 +31,13 @@ signals:
 
     void display_timer(int);
 
-    QJsonObject skiped_clicked(QuestionType);
+    void skiped_clicked();
 public:
     Question(QuestionMode mode);
-
-    static void lock_skip_button();
 
     ~Question();
 
 protected:
-    int time;
-
     QuestionMode mode;
 
     virtual void showEvent(QShowEvent* event) override;
@@ -52,7 +48,9 @@ protected:
 
     static bool skipButtonActive;
 private:
-    QTimer* timer;
+    static void lock_skip_button();
+
+    Timer* timer;
 
 private slots:
     void send_time();

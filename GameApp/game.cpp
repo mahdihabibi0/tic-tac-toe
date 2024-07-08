@@ -3,6 +3,7 @@
 #include "gamebutton.h"
 #include <QRandomGenerator>
 #include <QVector>
+#include "userHandler.h"
 
 void Game::create_dialog(QString situation){
     QLabel *label;
@@ -34,8 +35,8 @@ bool get_multiple_question(GameButton *btn,Game* g){
     static QVector<QuestionMode> vector={QuestionMode::bomb,QuestionMode::bomb,QuestionMode::normal,QuestionMode::normal,QuestionMode::normal,QuestionMode::king};
     if(vector.size()==0)
         return false;
-    int modeIndex = QRandomGenerator::global()->bounded(0, vector.size()-1);
-    btn->setQuestion(get_http_request_question(QuestionType::Multiple,g),vector[modeIndex]);
+    int modeIndex = QRandomGenerator::global()->bounded(vector.size());
+    btn->setUpButtonQuestion(QuestionType::Multiple,vector[modeIndex]);
     vector.erase(vector.begin()+ modeIndex);
     return true;
 }
@@ -44,8 +45,8 @@ bool get_numerical_question(GameButton *btn,Game* g){
     static QVector<QuestionMode> vector={QuestionMode::normal};
     if(vector.size()==0)
         return false;
-    int modeIndex=0;
-    btn->setQuestion(get_http_request_question(QuestionType::Multiple,g),vector[modeIndex]);
+    int modeIndex = QRandomGenerator::global()->bounded(vector.size());
+    btn->setUpButtonQuestion(QuestionType::Numerical,vector[modeIndex]);
     vector.erase(vector.begin()+ modeIndex);
     return true;
 }
@@ -54,27 +55,27 @@ bool get_short_answer_question(GameButton *btn,Game* g){
     static QVector<QuestionMode> vector={QuestionMode::bomb,QuestionMode::normal};
     if(vector.size()==0)
         return false;
-    int modeIndex=QRandomGenerator::global()->bounded(0, vector.size()-1);
-    btn->setQuestion(get_http_request_question(QuestionType::Multiple,g),vector[modeIndex]);
+    int modeIndex = QRandomGenerator::global()->bounded(vector.size());
+    btn->setUpButtonQuestion(QuestionType::Short,vector[modeIndex]);
     vector.erase(vector.begin()+ modeIndex);
     return true;
 }
 
 void Game::showEvent(QShowEvent *event)
 {
-    QDialog::showEvent(event);
     bool (*func[3])(GameButton*,Game*) ={get_multiple_question , get_numerical_question,get_short_answer_question };
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             GameButton* btn = qobject_cast<GameButton*>(ui->h->itemAtPosition(i,j)->widget());
             btn->setLoc(i,j);
             while(true){
-                int random = QRandomGenerator::global()->bounded(0,2);
+                int random = QRandomGenerator::global()->bounded(3);
                 if(func[random](btn,this))
                     break;
             }
         }
     }
+    QDialog::showEvent(event);
 }
 
 
@@ -153,9 +154,10 @@ void Game::game_drawed()
     create_dialog("Game Drawed");
 }
 
-void Game::lock_skip_button()
+void Game::start(QString ChallengerName)
 {
-    Question::
+    ui->player1Username->setText(get_user_name());
+    ui->player2Username->setText(ChallengerName);
 }
 
 void Game::play_again_handler()

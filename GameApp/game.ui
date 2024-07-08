@@ -22,8 +22,11 @@
      <height>31</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(0, 170, 0);</string>
+   </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="player2Username">
@@ -35,8 +38,11 @@
      <height>31</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0, 0);</string>
+   </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLCDNumber" name="Timer">
@@ -47,19 +53,6 @@
      <width>91</width>
      <height>41</height>
     </rect>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="exitBtn">
-   <property name="geometry">
-    <rect>
-     <x>520</x>
-     <y>10</y>
-     <width>83</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>HomePage</string>
    </property>
   </widget>
   <widget class="QLabel" name="label">

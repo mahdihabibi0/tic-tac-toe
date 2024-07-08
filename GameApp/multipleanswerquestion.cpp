@@ -19,8 +19,6 @@ void MultipleAnswerQuestion::set_question_obj(QJsonObject Qobj){
     for (int i = 0; i < 4; ++i)
         if(answers[i].toObject()["isCorrect"].toBool())
             correctAnswer = i;
-
-    this->time = 20;
 }
 
 MultipleAnswerQuestion::MultipleAnswerQuestion(QJsonObject Qobj , QuestionMode mode)
@@ -78,9 +76,7 @@ bool MultipleAnswerQuestion::checkAnswer(){
 
 void MultipleAnswerQuestion::on_skipBtn_clicked()
 {
-    QJsonObject newQuestion = emit skiped_clicked(QuestionType::Multiple);
-
-    set_question_obj(newQuestion);
+    emit skiped_clicked();
 
     this->close();
 }

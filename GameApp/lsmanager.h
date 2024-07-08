@@ -15,7 +15,7 @@ public:
     LoginPage l;
 
 signals:
-    bool defult_login_signal(QJsonObject user);
+    bool  defult_login_signal(QJsonObject user);
 
 public slots:
     void manage();

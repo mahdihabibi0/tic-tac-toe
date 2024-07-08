@@ -79,6 +79,14 @@ TCPSocketManager::TCPSocketManager() {
 
     QObject::connect(this,SIGNAL(connected()),this,SLOT(connected_to_server()));
 
+    QObject::connect(this,&QTcpSocket::connected,[&](){
+        qDebug() << "connected";
+    });
+
+    QObject::connect(this,&QTcpSocket::disconnected,[&](){
+        qDebug() << "disconnected";
+    });
+
     GetIpPage gip;
 
     QObject::connect(&gip , SIGNAL(rejected()),this,SLOT(close_the_program()));
@@ -177,11 +185,9 @@ void make_commands(QMap<QString , CommandOfSubServer>& c){
     c.insert("Player Lose",CommandOfSubServer::playerLose);
 
     c.insert("Game Drawed",CommandOfSubServer::gameِِDrawed);
-
-    c.insert("Skip Button Locked" , CommandOfSubServer::skipButtonLocked);
 }
 
-bool TCPSocketManager::try_to_start_game(){
+bool TCPSocketManager::try_to_start_game(QString username){
     QJsonObject process = make_process("Start Game");
 
     this->write(make_json_byte(process));
@@ -190,13 +196,17 @@ bool TCPSocketManager::try_to_start_game(){
 
     QJsonObject ipConfigObj = make_byte_json(this->readAll());
 
-    this->disconnect();
+    this->close();
 
     this->connectToHost(ipConfigObj["ipAddress"].toString() , ipConfigObj["port"].toInt());
 
-    make_commands(commands);
+    process["process"] = "Set Username";
+
+    process.insert("username" , username);
 
     this->write(make_json_byte(process));
+
+    make_commands(commands);
 
     QObject::connect(this , SIGNAL(readyRead()) , this , SLOT(subserver_read_handeler()));
 
@@ -279,13 +289,18 @@ QJsonObject TCPSocketManager::get_question_by_type(QuestionType type){
 
     QSignalSpy spy(this, SIGNAL(new_question_taken(QJsonObject)));
 
+    int beforCount = spy.count();
+
     spy.wait(5000); // Wait until the signal fires from subserver_read_handeler
 
-    if (spy.count() > 0) {
+    if (spy.count() > beforCount) {
         // Signal was emitted, handle it
         QList<QVariant> arguments = spy.takeFirst();
         return arguments.at(0).toJsonObject();
+
+        qDebug() << "resived a qusestion";
     } else {
+        qDebug() << "noooooo";
         throw QException();
     }
 }
@@ -311,6 +326,8 @@ int TCPSocketManager::get_player_statement(QString username)
 void TCPSocketManager::subserver_read_handeler(){
     QJsonObject commandObj = make_byte_json(this->readAll());
 
+    qDebug() << "resived a command";
+
     CommandOfSubServer command = commands[commandObj["command"].toString()];
 
     switch (command) {
@@ -324,7 +341,7 @@ void TCPSocketManager::subserver_read_handeler(){
         set_button_situation_handeler(commandObj , Situation::AnsweringByOpponent);
         break;
     case CommandOfSubServer::startTheGame:
-        emit startGame();
+        emit startGame(commandObj["ChallengerName"].toString());
         break;
     case CommandOfSubServer::newQuestion:
         emit new_question_taken(commandObj);
@@ -337,9 +354,6 @@ void TCPSocketManager::subserver_read_handeler(){
         break;
     case CommandOfSubServer::gameِِDrawed:
         emit game_drawed();
-        break;
-    case CommandOfSubServer::skipButtonLocked:
-        emit lock_skip_button();
         break;
     default:
         throw std::exception();

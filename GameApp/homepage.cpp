@@ -2,41 +2,7 @@
 #include "ui_homepage.h"
 #include <QMdiSubWindow>
 #include "timer.h"
-
-QJsonObject get_file_jsonobj(QString fileName){
-    QFile user;
-
-    user.setFileName(fileName);
-
-    user.open(QIODevice::ReadOnly);
-
-    QString userContacts = user.readAll();
-
-    user.close();
-
-    QJsonDocument userDoc = QJsonDocument::fromJson(userContacts.toUtf8());
-
-    return userDoc.object();
-}
-
-void delete_file_content(){
-
-    QFile user("user.json");
-
-    user.open(QFile::WriteOnly | QFile::Truncate);
-
-    user.close();
-}
-
-QString get_user_name(){
-
-    return get_file_jsonobj("user.json")["username"].toString();
-}
-
-int get_user_score(){
-    return get_file_jsonobj("user.json")["score"].toInt();
-}
-
+#include "userHandler.h"
 HomePage::HomePage(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::HomePage)
@@ -49,8 +15,8 @@ HomePage::~HomePage()
     delete ui;
 }
 
-void HomePage::start_game(){
-    emit show_game_page();
+void HomePage::start_game(QString ChallengerName){
+    emit show_game_page(ChallengerName);
 
     this->close();
 }
@@ -70,7 +36,6 @@ void HomePage::showEvent(QShowEvent *event)
 
     QObject::connect(t , &Timer::time_finished , [&](){
         ui->startGame->setText("Start new game");
-        delete t;
     });
 
     ui->userName->setText(get_user_name());
@@ -82,7 +47,7 @@ void HomePage::showEvent(QShowEvent *event)
 
 void HomePage::on_startGame_clicked()
 {
-    if(!emit try_to_start_new_game())
+    if(!emit try_to_start_new_game(get_user_name()))
         return;
 
     QMessageBox* waitForPlayer2 = new QMessageBox(this);
@@ -94,69 +59,9 @@ void HomePage::on_startGame_clicked()
     waitForPlayer2->show();
 
 
-    QObject::connect(this, SIGNAL(show_game_page()), waitForPlayer2, SLOT(deleteLater()));
+    QObject::connect(this, SIGNAL(show_game_page(QString)), waitForPlayer2, SLOT(deleteLater()));
 }
 
-//we must send challanger index and get his/her name
-QString get_challanger_name(int challangerIndex){
-    QFile user;
-
-    user.setFileName("user.json");
-
-    user.open(QIODevice::ReadOnly);
-
-    QString userContacts = user.readAll();
-
-    user.close();
-
-    QJsonDocument userDoc = QJsonDocument::fromJson(userContacts.toUtf8());
-
-    QJsonObject userObj = userDoc.object();
-
-    QJsonArray userArr=userObj["last3game"].toArray();
-
-    return userArr[challangerIndex].toObject()["challangername"].toString();
-}
-
-QString get_challange_time(int challangeNumber){
-    QFile user;
-
-    user.setFileName("user.json");
-
-    user.open(QIODevice::ReadOnly);
-
-    QString userContacts = user.readAll();
-
-    user.close();
-
-    QJsonDocument userDoc = QJsonDocument::fromJson(userContacts.toUtf8());
-
-    QJsonObject userObj = userDoc.object();
-
-    QJsonArray userArr=userObj["last3game"].toArray();
-
-    return userArr[challangeNumber].toObject()["time"].toString();
-}
-
-QString get_challange_situation(int challangeNumber){
-    QFile user;
-
-    user.setFileName("user.json");
-
-    user.open(QIODevice::ReadOnly);
-
-    QString userContacts = user.readAll();
-
-    user.close();
-
-    QJsonDocument userDoc = QJsonDocument::fromJson(userContacts.toUtf8());
-
-    QJsonObject userObj = userDoc.object();
-
-    QJsonArray userArr=userObj["last3game"].toArray();
-
-    return userArr[challangeNumber].toObject()["situation"].toString();
-}
 
 void create_game_history_page_setting(QDialog *Dialog){
     QTableWidget *gamesTable;

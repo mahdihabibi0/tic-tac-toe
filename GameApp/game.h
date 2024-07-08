@@ -28,6 +28,8 @@ public slots:
     void game_drawed();
 
     void lock_skip_button();
+
+    void start(QString ChallengerName);
 private:
     Ui::Game *ui;
 

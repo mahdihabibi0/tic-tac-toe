@@ -6,6 +6,17 @@ Timer::Timer(int time) : time(time) , timeValide(time)
     QObject::connect(this , SIGNAL(timeout()) , this , SLOT(time_handler()));
 }
 
+void Timer::reset(int time)
+{
+    this->time = time;
+
+    this->timeValide = time;
+
+    this->start(1000);
+
+    QObject::connect(this , SIGNAL(timeout()) , this , SLOT(time_handler()));
+}
+
 int Timer::get_rem_time()
 {
     if(time <= 0)
