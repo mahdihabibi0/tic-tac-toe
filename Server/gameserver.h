@@ -15,8 +15,13 @@ public:
 
     bool requestForNewConection(QString username);
 
-    int  intrequest_for_rem_time_of_game(QString username);
+    int  request_for_rem_time_of_game(QString username);
+
+    void  addToWaiters(QString);
 private:
+
+    int countOfPlayer;
+
     GameSocketManager* gsm1;
 
     GameSocketManager* gsm2;
@@ -38,6 +43,8 @@ private slots:
     void newConnectionHandler();
 
     void socket_disconnected_handler(QString username);
+signals:
+    void ready_for_start_the_game();
 };
 
 #endif // GAMESERVER_H

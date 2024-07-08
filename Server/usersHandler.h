@@ -62,8 +62,6 @@ bool try_to_signup(QJsonObject qjo){
 
     addToJsonFile.insert("score", 0);
 
-    addToJsonFile.insert("password",qjo["password"].toString());
-
     auto lg1 = QJsonObject({
         qMakePair(QString("challangername"), QJsonValue(QString())),
         qMakePair(QString("situation"), QJsonValue(QString())),

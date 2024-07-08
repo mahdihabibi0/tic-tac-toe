@@ -14,7 +14,7 @@ public:
 
     void start();
 private slots:
-    QJsonObject start_game(QString);
+    QJsonObject start_game_requested(QString);
 
     bool setIp(QString ip);
 

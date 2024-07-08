@@ -20,6 +20,10 @@ public:
     bool getChanceForWin();
 
     bool setSocket(QTcpSocket *socket);
+
+    QString get_username();
+
+    void start_game(QString ChallengerName);
 private slots:
     void read_handler();
 
@@ -28,6 +32,7 @@ private slots:
     void win_handler(QString name);
 
     void disconnected_handler();
+
 private:
     QString username;
 
@@ -36,6 +41,8 @@ private:
     DoozeMap map;
 
     bool chanceForWin;
+
+    void get_new_question_from_http(int);
 signals:
     void player_answered_true(QPair<int,int>);
 
@@ -50,6 +57,8 @@ signals:
     bool username_setted(QString username);
 
     void disconnect(QString username);
+
+    void send_username();
 public slots:
     void challanger_answered_true(QPair<int,int>);
 

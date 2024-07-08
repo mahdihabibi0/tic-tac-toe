@@ -2,6 +2,13 @@
 
 QVector<Situation> goodSits = {Situation::answerdTrue , Situation::normal};
 
+mapItem* getIndex(QVector<QVector<mapItem>>& map , int i , int j){
+    if(i>=0 && i<3 && j >= 0 && j < 3)
+        return &map[i][j];
+    else
+        return nullptr;
+}
+
 void setup(QVector<QVector<mapItem>>& map , int i , int j){
     mapItem* left;
     mapItem* leftOtop;
@@ -12,47 +19,14 @@ void setup(QVector<QVector<mapItem>>& map , int i , int j){
     mapItem* buttom;
     mapItem* buttomOleft;
 
-    try {
-        left = &map[i - 1][j];
-    } catch (...) {
-        left = NULL;
-    }
-    try{
-        leftOtop = &map[i - 1][j - 1];
-    }
-    catch(...){
-        leftOtop = NULL;
-    }
-    try {
-        top = &map[i][j - 1];
-    } catch (...) {
-        top = NULL;
-    }
-    try {
-        topOright = &map[i + 1][j - 1];
-    } catch (...) {
-        topOright = NULL;
-    }
-    try {
-        right = &map[i + 1][j];
-    } catch (...) {
-        right = NULL;
-    }
-    try {
-        rightObuttom = &map[i + 1][j + 1];
-    } catch (...) {
-        rightObuttom = NULL;
-    }
-    try {
-        buttom = &map[i][j + 1];
-    } catch (...) {
-        buttom = NULL;
-    }
-    try {
-        buttomOleft = &map[i - 1][j + 1];
-    } catch (...) {
-        buttomOleft = NULL;
-    }
+    left = getIndex(map , i - 1 , j);
+    leftOtop = getIndex(map , i - 1 , j - 1);
+    top = getIndex(map , i , j - 1);
+    topOright = getIndex(map , i + 1 , j + 1);
+    right = getIndex(map , i , j + 1);
+    rightObuttom = getIndex(map , i + 1, j + 1);
+    buttom = getIndex(map , i + 1 , j);
+    buttomOleft = getIndex(map , i + 1  , j -1 );
 
     map[i][j].set(left , leftOtop , top , topOright , right , rightObuttom , buttom , buttomOleft);
 }
