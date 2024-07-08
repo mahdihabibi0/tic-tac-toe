@@ -7,8 +7,6 @@ void ShortAnswerQuestion::set_question_obj(QJsonObject Qobj){
     ui->questionText->setText(Qobj["questionText"].toString());
 
     answer =  Qobj["answers"].toString();
-
-    this->time = 20;
 }
 
 ShortAnswerQuestion::ShortAnswerQuestion(QJsonObject Qobj,QuestionMode mode)
@@ -53,9 +51,7 @@ void ShortAnswerQuestion::on_submitBtn_clicked()
 
 void ShortAnswerQuestion::on_skipBtn_clicked()
 {
-    QJsonObject newQuestion = emit skiped_clicked(QuestionType::Short);
-
-    set_question_obj(newQuestion);
+    emit skiped_clicked();
 
     this->close();
 }

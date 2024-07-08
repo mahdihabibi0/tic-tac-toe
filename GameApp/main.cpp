@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     HomePage h;
     LSManager ls;
 
-    QObject::connect(&ls , SIGNAL(defult_login_signal(QJsonObject)) , &s , SLOT(try_to_defult_login_handler(QJsonObject)));
+    QObject::connect(&ls , SIGNAL(defult_login_signal(QJsonObject)) , &s , SLOT(try_to_default_login_handler(QJsonObject)));
 
     QObject::connect(&ls.l , SIGNAL(try_to_login(QJsonObject)) , &s , SLOT(try_to_login_handler(QJsonObject)));
 
@@ -23,6 +23,14 @@ int main(int argc, char *argv[])
     QObject::connect(&ls.l , SIGNAL(get_user_information(QString)) , &s , SLOT(get_user_information(QString)));
 
     QObject::connect(&h , SIGNAL(logout()) , &ls.l , SLOT(show()));
+
+    QObject::connect(&h , SIGNAL(get_statement(QString)) , &s , SLOT(get_player_statement(QString)));
+
+    QObject::connect(&h , SIGNAL(try_to_start_new_game(QString)) , &s , SLOT(try_to_start_game(QString)));
+
+    QObject::connect(&h , SIGNAL(show_game_page(QString)) , &g , SLOT(start(QString)));
+
+    QObject::connect(&s , SIGNAL(startGame(QString)) , &h , SLOT(start_game(QString)));
 
     QObject::connect(&g , SIGNAL(answered_true(int,int)) , &s , SLOT(subserver_palayer_answered_true_process(int , int)));
 

@@ -2,11 +2,13 @@
 #define TIMER_H
 #include <QTimer>
 
-class Timer : private QTimer
+class Timer : public QTimer
 {
     Q_OBJECT
 public:
     Timer(int time);
+
+    void reset(int time);
 
     int get_rem_time();
 

@@ -23,8 +23,14 @@ public:
     void set_situation(Situation s);
 
     void setLoc(int i , int j);
+
+    void setUpButtonQuestion(QuestionType , QuestionMode);
 private:
     QPair<int , int> loc;
+
+    QuestionMode modeOfQuestion;
+
+    QuestionType typeOfQuestion;
 
     Question* q;
 
@@ -46,7 +52,7 @@ private slots:
 
     void answer_false_handeler();
 
-    QJsonObject skiped_clicked_handeler(QuestionType type);
+    void skiped_clicked_handeler();
 
     void clicked_handeler(bool);
 };

@@ -18,7 +18,6 @@ enum CommandOfSubServer{
     playerWon,
     playerLose,
     gameِِDrawed,
-    skipButtonLocked
 };
 
 class TCPSocketManager : public QTcpSocket
@@ -42,7 +41,7 @@ public slots:
 
     bool try_to_signup_handler(QJsonObject user);
 
-    bool try_to_start_game();
+    bool try_to_start_game(QString username);
 
     void connected_to_server();
 
@@ -69,15 +68,13 @@ signals:
 
     void set_button_situation(int i,int j,Situation s);
 
-    void startGame();
+    void startGame(QString ChallengerName);
 
     void player_won();
 
     void player_lose();
 
     void game_drawed();
-
-    void lock_skip_button();
 private:
     QMap<QString , CommandOfSubServer> commands;
 

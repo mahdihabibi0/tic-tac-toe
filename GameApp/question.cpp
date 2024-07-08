@@ -4,7 +4,7 @@
 
 bool Question::skipButtonActive = true;
 
-Question::Question(QuestionMode mode):QDialog(nullptr),mode(mode),timer(new QTimer(this)){
+Question::Question(QuestionMode mode):QDialog(nullptr),mode(mode){
 
 }
 
@@ -32,21 +32,30 @@ void showMessageBoxForQuestion(QString title , QString Text , QString styleSheet
 void Question::showEvent(QShowEvent* event) {
     this->showEvent(event);
 
-    this->timer->start(1000);
+    if(timer)
+        timer->deleteLater();
 
+    timer = new Timer(20);
 
-    QObject::connect(timer, SIGNAL(timeout()), this , SLOT(send_time()));
+    QObject::connect(timer, &Timer::time_finished, [&](){
+        emit answer_false();
+        timer->deleteLater();
+    });
 
+    QObject::connect(timer, &Timer::timeout, [&](){
+        emit display_timer(timer->get_rem_time());
+    });
+
+    QObject::connect(this , &Question::skiped_clicked , [&](){
+        static int count = 0;
+        if(++count == 2)
+            lock_skip_button();
+        timer->deleteLater();
+    });
 }
 
 Question::~Question(){
     delete timer;
-}
-
-void Question::send_time(){
-    if(time == 0)
-        emit answer_false();
-    emit display_timer(time--);
 }
 
 bool Question::eventFilter(QObject* obj, QEvent* event) {

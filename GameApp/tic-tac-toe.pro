@@ -23,7 +23,8 @@ SOURCES += \
     shortanswerquestion.cpp \
     signuppage.cpp \
     tcpsocketmanager.cpp \
-    timer.cpp
+    timer.cpp \
+    userHandler.cpp
 
 HEADERS += \
     getippage.h \
@@ -38,7 +39,8 @@ HEADERS += \
     shortanswerquestion.h \
     signuppage.h \
     tcpsocketmanager.h \
-    timer.h
+    timer.h \
+    userHandler.h
 
 FORMS += \
     game.ui \

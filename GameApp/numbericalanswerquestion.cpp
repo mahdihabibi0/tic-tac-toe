@@ -7,8 +7,6 @@ void NumbericalAnswerQuestion::set_question_obj(QJsonObject Qobj){
     ui->questionText->setText(Qobj["questionText"].toString());
 
     answer = Qobj["answer"].toInt();
-
-    this->time = 20;
 }
 
 NumbericalAnswerQuestion::NumbericalAnswerQuestion(QJsonObject Qobj,QuestionMode mode) :
@@ -50,9 +48,7 @@ void NumbericalAnswerQuestion::on_submitBtn_clicked()
 }
 
 void NumbericalAnswerQuestion::on_skipBtn_clicked(){
-    QJsonObject newQuestion = emit skiped_clicked(QuestionType::Numerical);
-
-    set_question_obj(newQuestion);
+    skiped_clicked();
 
     this->close();
 }

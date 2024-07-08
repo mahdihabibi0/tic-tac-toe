@@ -2,7 +2,6 @@
 #define HOMEPAGE_H
 
 #include <QDialog>
-#include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -22,8 +21,6 @@ public:
     explicit HomePage(QWidget *parent = nullptr);
 
     ~HomePage();
-
-    void start_game();
 protected:
     void showEvent(QShowEvent* event) override;
 private slots:
@@ -33,6 +30,8 @@ private slots:
     void on_gameHistory_clicked();
 
     void on_logOut_clicked();
+public slots:
+    void start_game(QString ChallengerName);
 
 private:
     Ui::HomePage *ui;
@@ -42,9 +41,9 @@ signals:
 
     void logout();
 
-    bool try_to_start_new_game();
+    bool try_to_start_new_game(QString);
 
-    void show_game_page();
+    void show_game_page(QString ChallengerName);
 
 };
 
