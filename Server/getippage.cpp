@@ -35,11 +35,13 @@ GetIPpage::~GetIPpage()
 
 void GetIPpage::on_submitBtn_clicked()
 {
-    if(emit ipAddress(ui->ipInput->text()))
-        emit closeThePage();
+    if(emit ipAddressSetted(ui->ipInput->text()))
+        this->hide();
     else{
         ui->ipInput->clear();
+
         show_message_box(this , "invalide input" , "the ip adress is not corruct" , "color : rgba(255 , 0 , 0)");
+
         ui->submitBtn->setEnabled(false);
     }
 }

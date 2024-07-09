@@ -1,9 +1,10 @@
 #ifndef GAMESERVER_H
 #define GAMESERVER_H
 #include <QTcpServer>
-#include "gamesocketmanager.h"
 #include <QMap>
+#include "gamesocketmanager.h"
 #include "timer.h"
+#include "mapstatements.h"
 
 class GameServer : public QTcpServer
 {
@@ -17,8 +18,13 @@ public:
 
     int  request_for_rem_time_of_game(QString username);
 
-    void  addToWaiters(QString);
+    void  waitFor(QString);
+
+    int getId();
 private:
+    int id;
+
+    static int idGen;
 
     int countOfPlayer;
 
@@ -31,6 +37,8 @@ private:
     QVector<QString> PlayersWaiting;
 
     QMap<QString , Timer*> disconnectedPlayers;
+
+    MapStatements mapStates;
 private slots:
     void checkForGameEqualed();
 
@@ -43,7 +51,11 @@ private slots:
     void newConnectionHandler();
 
     void socket_disconnected_handler(QString username);
+
+    QVector<QVector<MapItem> > take_map_states_from_game_server();
 signals:
+    void GameDestroyed(int id);
+
     void ready_for_start_the_game();
 };
 
