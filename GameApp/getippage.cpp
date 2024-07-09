@@ -1,5 +1,6 @@
 #include "getippage.h"
 #include "ui_getippage.h"
+#include "buttonSound.h"
 
 GetIpPage::GetIpPage(QWidget *parent)
     : QDialog(parent)
@@ -28,6 +29,8 @@ int GetIpPage::get_port()
 
 void GetIpPage::accept_button()
 {
+    play_normal_button_sound();
     ipAddress = ui->ipAddress->text();
     port=ui->port->text().toInt();
+
 }

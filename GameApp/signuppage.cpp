@@ -1,6 +1,7 @@
 #include "signuppage.h"
 #include "ui_signuppage.h"
 #include <QMessageBox>
+#include "buttonSound.h"
 
 SignupPage::SignupPage(QWidget *parent)
     : QDialog(parent)
@@ -43,6 +44,8 @@ bool SignupPage::check_inputs(){
 
 void SignupPage::on_submitBtn_clicked()
 {
+    play_normal_button_sound();
+
     if(!check_inputs())
 
         return;
@@ -71,6 +74,8 @@ void SignupPage::on_submitBtn_clicked()
 
 void SignupPage::on_hidePassword_clicked()
 {
+    play_normal_button_sound();
+
     if(ui->passwordInput->echoMode() == QLineEdit::Password)
 
         ui->passwordInput->setEchoMode(QLineEdit::Normal);
@@ -84,6 +89,8 @@ void SignupPage::on_hidePassword_clicked()
 
 void SignupPage::on_loginBtn_clicked()
 {
+    play_normal_button_sound();
+
     emit loginButton_clicked();
 }
 

@@ -210,6 +210,8 @@ bool TCPSocketManager::try_to_start_game(QString username){
 
     QObject::connect(this , SIGNAL(readyRead()) , this , SLOT(subserver_read_handeler()));
 
+    qDebug()<< "socket manager say that c" ;
+
     return true;
 }
 
@@ -287,22 +289,18 @@ QJsonObject TCPSocketManager::get_question_by_type(QuestionType type){
 
     this->write(make_json_byte(process));
 
-    QSignalSpy spy(this, SIGNAL(new_question_taken(QJsonObject)));
+    QJsonObject answer;
 
-    int beforCount = spy.count();
+    QEventLoop loop;
 
-    spy.wait(5000); // Wait until the signal fires from subserver_read_handeler
+    QObject::connect(this,&TCPSocketManager::new_question_taken,[&](QJsonObject question){
+        answer = question;
+        loop.quit();
+    });
 
-    if (spy.count() > beforCount) {
-        // Signal was emitted, handle it
-        QList<QVariant> arguments = spy.takeFirst();
-        return arguments.at(0).toJsonObject();
+    loop.exec();
 
-        qDebug() << "resived a qusestion";
-    } else {
-        qDebug() << "noooooo";
-        throw QException();
-    }
+    return answer;
 }
 
 void TCPSocketManager::close_the_program()
@@ -321,6 +319,22 @@ int TCPSocketManager::get_player_statement(QString username)
     waitForReadyRead(-1);
 
     return this->readAll().toInt();
+}
+
+QJsonObject TCPSocketManager::game_map()
+{
+    QJsonObject requestMap;
+    requestMap.insert("process","Get Game Map");
+    this->write(make_json_byte(requestMap));
+    QEventLoop loop;
+    QJsonObject result;
+    QObject::connect(this,&TCPSocketManager::send_game_map,[&](QJsonObject map){
+        result = map;
+        loop.quit();
+    });
+    loop.exec();
+
+    return result;
 }
 
 void TCPSocketManager::subserver_read_handeler(){
@@ -345,6 +359,7 @@ void TCPSocketManager::subserver_read_handeler(){
         break;
     case CommandOfSubServer::newQuestion:
         emit new_question_taken(commandObj);
+        qDebug()<<"new question signal emitted";
         break;
     case CommandOfSubServer::playerWon:
         emit player_won();
@@ -354,6 +369,9 @@ void TCPSocketManager::subserver_read_handeler(){
         break;
     case CommandOfSubServer::gameِِDrawed:
         emit game_drawed();
+        break;
+    case CommandOfSubServer::getGameMap:
+        emit send_game_map(commandObj);
         break;
     default:
         throw std::exception();

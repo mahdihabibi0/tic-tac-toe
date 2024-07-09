@@ -76,6 +76,7 @@ bool MultipleAnswerQuestion::checkAnswer(){
 
 void MultipleAnswerQuestion::on_skipBtn_clicked()
 {
+    play_normal_button_sound();
     emit skiped_clicked();
 
     this->close();
@@ -83,12 +84,16 @@ void MultipleAnswerQuestion::on_skipBtn_clicked()
 
 void MultipleAnswerQuestion::showEvent(QShowEvent *event)
 {
+    qDebug()<<"skip button sit :" << Question::skipButtonActive;
+
     ui->skipBtn->setEnabled(Question::skipButtonActive);
+
     Question::showEvent(event);
 }
 
 void MultipleAnswerQuestion::on_submitBtn_clicked()
 {
+    play_game_button_sound();
     try {
         if(checkAnswer())
             emit answer_true();

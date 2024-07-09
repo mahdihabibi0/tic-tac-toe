@@ -42,6 +42,10 @@ int main(int argc, char *argv[])
 
     QObject::connect(&g , SIGNAL(set_back_normal(int,int)) , &s , SLOT(subserver_player_set_back_to_normal(int ,int)));
 
+    QObject::connect(&s,SIGNAL(set_button_situation(int,int,Situation)),&g,SLOT(set_button_situation(int,int,Situation)));
+
+    QObject::connect(&g , SIGNAL(get_game_map()) , &s , SLOT(game_map()));
+
     ls.manage();
     return a.exec();
 }

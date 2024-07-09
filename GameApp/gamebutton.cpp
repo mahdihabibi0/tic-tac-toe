@@ -3,7 +3,8 @@
 #include "multipleanswerquestion.h"
 #include "numbericalanswerquestion.h"
 #include "shortanswerquestion.h"
-
+#include "buttonSound.h"
+//#include <QObject>
 void GameButton::update_the_button(){
 
     switch (situation) {
@@ -35,9 +36,11 @@ void GameButton::update_the_button(){
 
 GameButton::GameButton(QWidget* parent):QPushButton(parent) , situation(Situation::Normal) {
     update_the_button();
+    QObject::connect(this,SIGNAL(clicked(bool)),this,SLOT(clicked_handeler(bool)));
 }
 
 void GameButton::setQuestion(QJsonObject Qobj , QuestionMode mode){
+    qDebug() << "set buutton question is started";
     QString type = Qobj["type"].toString();
 
     if (type == "short")
@@ -55,7 +58,7 @@ void GameButton::setQuestion(QJsonObject Qobj , QuestionMode mode){
 
     QObject::connect(q , SIGNAL(answer_false()) , this , SLOT(answer_false_handeler()));
 
-    QObject::connect(this , SIGNAL(clicked(bool)) , this , SLOT(clicked_handeler(bool)));
+    qDebug() << "set buutton question is fineshed";
 }
 
 void GameButton::set_situation(Situation s)
@@ -93,6 +96,7 @@ void GameButton::skiped_clicked_handeler(){
 
 
 void GameButton::clicked_handeler(bool){
+    play_game_button_sound();
     if(situation == Situation::AnsweringByOpponent)
         showMessageBoxForQuestion("bad select" , "it is answering\nby your opponent" , "color : rgba(255 , 0 , 0);");
     else{
@@ -101,7 +105,10 @@ void GameButton::clicked_handeler(bool){
         this->setQuestion(emit get_new_question(typeOfQuestion) , modeOfQuestion);
         q->setWindowModality(Qt::ApplicationModal);
         q->setWindowFlags(q->windowFlags() & ~Qt::WindowCloseButtonHint);
+        qDebug() << "question show mothod called";
         q->show();
+
+        qDebug() << "emited ansering to question";
         emit is_answering_to_question(loc.first , loc.second);
     }
 }

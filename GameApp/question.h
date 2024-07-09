@@ -6,6 +6,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include "timer.h"
+#include "buttonSound.h"
 
 enum QuestionMode{
     normal,

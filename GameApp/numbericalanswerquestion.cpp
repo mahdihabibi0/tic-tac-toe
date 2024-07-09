@@ -41,6 +41,7 @@ NumbericalAnswerQuestion::NumbericalAnswerQuestion(QJsonObject Qobj,QuestionMode
 
 void NumbericalAnswerQuestion::on_submitBtn_clicked()
 {
+    play_game_button_sound();
     if(ui->answerSpinBox->value() == answer)
         emit answer_true();
     else
@@ -48,6 +49,8 @@ void NumbericalAnswerQuestion::on_submitBtn_clicked()
 }
 
 void NumbericalAnswerQuestion::on_skipBtn_clicked(){
+    play_normal_button_sound();
+
     skiped_clicked();
 
     this->close();
@@ -55,7 +58,10 @@ void NumbericalAnswerQuestion::on_skipBtn_clicked(){
 
 void NumbericalAnswerQuestion::showEvent(QShowEvent *event)
 {
+    qDebug()<<"skip button sit :" << Question::skipButtonActive;
+
     ui->skipBtn->setEnabled(Question::skipButtonActive);
+
     Question::showEvent(event);
 }
 

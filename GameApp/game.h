@@ -56,6 +56,8 @@ signals:
 
     void set_back_normal(int,int);
 
+    QJsonObject get_game_map();
+
 private slots:
 
     QJsonObject get_new_question_handler(QuestionType type);
@@ -67,6 +69,8 @@ private slots:
     void is_answering_to_question_handler(int i,int j);
 
     void set_back_button_to_normal_handler(int i , int j);
+
+    void update_timer();
 
 };
 
