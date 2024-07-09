@@ -3,6 +3,7 @@
 #include <QTcpServer>
 #include <QJsonObject>
 #include <QVector>
+#include <QMap>
 #include "gameserver.h"
 #include "getippage.h"
 
@@ -20,7 +21,7 @@ private slots:
 
     void new_connection();
 private:    
-    QVector<GameServer*> gameservers;
+    QMap<int , GameServer*> gameservers;
 
     GetIPpage gip;
 

@@ -21,10 +21,9 @@ bool Timer::get_time_valide()
 
 void Timer::time_handler()
 {
-    time--;
-    if(time <= 0)
+    if(time == 0)
     {
         emit time_finished();
-        QObject::disconnect(this , SIGNAL(timeout()) , this , SLOT(time_handler()));
+        this->stop();
     }
 }

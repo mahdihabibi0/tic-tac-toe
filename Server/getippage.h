@@ -21,9 +21,8 @@ private slots:
     void on_ipInput_textChanged(const QString &arg1);
 
 signals:
-    bool ipAddress(QString ip);
+    bool ipAddressSetted(QString ip);
 
-    void closeThePage();
 private:
     Ui::GetIPpage *ui;
 };

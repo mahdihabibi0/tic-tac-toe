@@ -2,14 +2,8 @@
 #define GAMESOCKETMANAGER_H
 #include <QTcpSocket>
 #include <QObject>
-#include "doozemap.h"
-
-// enum Situation{
-//     answerdTrue,
-//     answerdFalse,
-//     normal,
-//     answeredByOppenent
-// };
+#include <QJsonObject>
+#include "mapsituations.h"
 
 class GameSocketManager : public QObject
 {
@@ -23,7 +17,10 @@ public:
 
     QString get_username();
 
-    void start_game(QString ChallengerName);
+    void start_game(QVector<QVector<MapItem>> MapStates ,QString ChallengerName);
+
+    bool getActive();
+
 private slots:
     void read_handler();
 
@@ -38,11 +35,15 @@ private:
 
     QTcpSocket* socket;
 
-    DoozeMap map;
+    MapSituations map;
 
     bool chanceForWin;
 
     void get_new_question_from_http(int);
+
+    QJsonArray get_map(QVector<QVector<MapItem> > MapStates);
+    //this value is false when socket is null or disconnected
+    bool Active;
 signals:
     void player_answered_true(QPair<int,int>);
 
@@ -56,7 +57,7 @@ signals:
 
     bool username_setted(QString username);
 
-    void disconnect(QString username);
+    void disconnected(QString username);
 
     void send_username();
 public slots:

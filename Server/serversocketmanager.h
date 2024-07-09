@@ -1,5 +1,5 @@
-#ifndef SOCKETMANAGER_H
-#define SOCKETMANAGER_H
+#ifndef SERVERSOCKETMANAGER_H
+#define SERVERSOCKETMANAGER_H
 
 #include <QObject>
 #include <QTcpSocket>
@@ -7,7 +7,7 @@
 #include <QJsonDocument>
 #include <QMap>
 
-class SocketManager : public QObject
+class ServerSocketManager : public QObject
 {
     Q_OBJECT
 private:
@@ -15,7 +15,7 @@ private:
 
     QString  username;
 public:
-    SocketManager(QTcpSocket*);
+    ServerSocketManager(QTcpSocket*);
 public slots:
     void read_handler();
 
@@ -26,4 +26,4 @@ signals:
     QJsonObject start_game_request(QString);
 };
 
-#endif // SOCKETMANAGER_H
+#endif // SERVERSOCKETMANAGER_H
