@@ -31,7 +31,7 @@ private slots:
 
     void on_logOut_clicked();
 public slots:
-    void start_game(QString ChallengerName);
+    void start_game(QJsonObject jo);
 
 private:
     Ui::HomePage *ui;
@@ -43,7 +43,7 @@ signals:
 
     bool try_to_start_new_game(QString);
 
-    void show_game_page(QString ChallengerName);
+    void show_game_page(QJsonObject);
 
 };
 

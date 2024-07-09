@@ -321,26 +321,10 @@ int TCPSocketManager::get_player_statement(QString username)
     return this->readAll().toInt();
 }
 
-QJsonObject TCPSocketManager::game_map()
-{
-    QJsonObject requestMap;
-    requestMap.insert("process","Get Game Map");
-    this->write(make_json_byte(requestMap));
-    QEventLoop loop;
-    QJsonObject result;
-    QObject::connect(this,&TCPSocketManager::send_game_map,[&](QJsonObject map){
-        result = map;
-        loop.quit();
-    });
-    loop.exec();
-
-    return result;
-}
-
 void TCPSocketManager::subserver_read_handeler(){
     QJsonObject commandObj = make_byte_json(this->readAll());
 
-    qDebug() << "resived a command";
+    qDebug() << "resived a command : " << commandObj["command"].toString();
 
     CommandOfSubServer command = commands[commandObj["command"].toString()];
 
@@ -355,7 +339,7 @@ void TCPSocketManager::subserver_read_handeler(){
         set_button_situation_handeler(commandObj , Situation::AnsweringByOpponent);
         break;
     case CommandOfSubServer::startTheGame:
-        emit startGame(commandObj["ChallengerName"].toString());
+        emit startGame(commandObj);
         break;
     case CommandOfSubServer::newQuestion:
         emit new_question_taken(commandObj);
@@ -369,9 +353,6 @@ void TCPSocketManager::subserver_read_handeler(){
         break;
     case CommandOfSubServer::gameِِDrawed:
         emit game_drawed();
-        break;
-    case CommandOfSubServer::getGameMap:
-        emit send_game_map(commandObj);
         break;
     default:
         throw std::exception();

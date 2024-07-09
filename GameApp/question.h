@@ -52,10 +52,6 @@ private:
     static void lock_skip_button();
 
     Timer* timer;
-
-private slots:
-    void send_time();
-
 };
 
 #endif // QUESTION_H

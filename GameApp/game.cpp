@@ -63,9 +63,14 @@ bool get_short_answer_question(GameButton *btn,Game* g){
 
 void Game::showEvent(QShowEvent *event)
 {
-    QJsonObject getGameMap;
-    getGameMap.insert("process","Get Game Map");
-    QJsonObject map = emit get_game_map();
+    // for (int i = 0; i < 3; ++i) {
+    //     for (int j = 0; j < 3; ++j) {
+    //         GameButton *btn =qobject_cast<GameButton*>(this->ui->h->itemAtPosition(i,j)->widget());
+    //         btn->setUpButtonQuestion(QuestionType(map["map"].toArray()[i].toArray()[j].toObject()["type"].toInt()),QuestionMode(map["map"].toArray()[i].toArray()[j].toObject()["mode"].toInt()));
+    //         btn->setLoc(i,j);
+    //         btn->set_situation((Situation)map["map"].toArray()[i].toArray()[j].toObject()["type"].toInt());
+    //     }
+    // }
     QTimer* gameTimer=new QTimer(this);
     QObject::connect(gameTimer,SIGNAL(timeout()),this,SLOT(update_timer()));
     gameTimer->start(1000);
@@ -155,10 +160,19 @@ void Game::game_drawed()
     create_dialog("Game Drawed");
 }
 
-void Game::start(QString ChallengerName)
+void Game::start(QJsonObject jo)
 {
     ui->player1Username->setText(get_user_name());
-    ui->player2Username->setText(ChallengerName);
+    ui->player2Username->setText(jo["ChallengerName"].toString());
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            GameButton *btn =qobject_cast<GameButton*>(this->ui->h->itemAtPosition(i,j)->widget());
+            btn->setUpButtonQuestion(QuestionType(jo["map"].toArray()[i].toArray()[j].toObject()["type"].toInt()),QuestionMode(jo["map"].toArray()[i].toArray()[j].toObject()["mode"].toInt()));
+            btn->setLoc(i,j);
+            btn->set_situation(Situation(jo["map"].toArray()[i].toArray()[j].toObject()["sit"].toInt()));
+        }
+    }
+
     this->show();
 }
 

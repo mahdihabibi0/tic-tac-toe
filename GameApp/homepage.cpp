@@ -17,9 +17,9 @@ HomePage::~HomePage()
     delete ui;
 }
 
-void HomePage::start_game(QString ChallengerName){
+void HomePage::start_game(QJsonObject jo){
 
-    emit show_game_page(ChallengerName);
+    emit show_game_page(jo);
 
     this->close();
 }
@@ -64,7 +64,7 @@ void HomePage::on_startGame_clicked()
     waitForPlayer2->show();
 
 
-    QObject::connect(this, SIGNAL(show_game_page(QString)), waitForPlayer2, SLOT(deleteLater()));
+    QObject::connect(this, SIGNAL(show_game_page(QJsonObject)), waitForPlayer2, SLOT(deleteLater()));
 }
 
 

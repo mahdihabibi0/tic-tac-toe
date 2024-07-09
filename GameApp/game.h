@@ -29,7 +29,7 @@ public slots:
 
     void lock_skip_button();
 
-    void start(QString ChallengerName);
+    void start(QJsonObject);
 private:
     Ui::Game *ui;
 

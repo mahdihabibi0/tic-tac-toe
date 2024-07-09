@@ -28,9 +28,9 @@ int main(int argc, char *argv[])
 
     QObject::connect(&h , SIGNAL(try_to_start_new_game(QString)) , &s , SLOT(try_to_start_game(QString)));
 
-    QObject::connect(&h , SIGNAL(show_game_page(QString)) , &g , SLOT(start(QString)));
+    QObject::connect(&h , SIGNAL(show_game_page(QJsonObject)) , &g , SLOT(start(QJsonObject)));
 
-    QObject::connect(&s , SIGNAL(startGame(QString)) , &h , SLOT(start_game(QString)));
+    QObject::connect(&s , SIGNAL(startGame(QJsonObject)) , &h , SLOT(start_game(QJsonObject)));
 
     QObject::connect(&g , SIGNAL(answered_true(int,int)) , &s , SLOT(subserver_palayer_answered_true_process(int , int)));
 

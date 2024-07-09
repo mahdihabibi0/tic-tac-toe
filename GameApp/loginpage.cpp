@@ -64,7 +64,7 @@ void LoginPage::on_submitBtn_clicked()
         return;
     }
 
-    userJson = emit get_user_information(userJson["usernaem"].toString());
+    userJson = emit get_user_information(userJson["username"].toString());
 
     QFile jsonFile("user.json");
 
