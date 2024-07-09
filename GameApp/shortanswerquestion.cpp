@@ -40,6 +40,7 @@ ShortAnswerQuestion::ShortAnswerQuestion(QJsonObject Qobj,QuestionMode mode)
 
 void ShortAnswerQuestion::on_submitBtn_clicked()
 {
+    play_game_button_sound();
     if(!ui->answerLineEdite->text().size())
         showMessageBoxForQuestion("invalide inputes" , "you should select an answer" , "color : rgba( 255, 0, 0)");
     if(ui->answerLineEdite->text() == answer)
@@ -51,6 +52,8 @@ void ShortAnswerQuestion::on_submitBtn_clicked()
 
 void ShortAnswerQuestion::on_skipBtn_clicked()
 {
+    play_normal_button_sound();
+
     emit skiped_clicked();
 
     this->close();
@@ -58,8 +61,12 @@ void ShortAnswerQuestion::on_skipBtn_clicked()
 
 void ShortAnswerQuestion::showEvent(QShowEvent *event)
 {
+    qDebug()<<"skip button sit :" << Question::skipButtonActive;
+
     ui->skipBtn->setEnabled(Question::skipButtonActive);
+
     Question::showEvent(event);
+
 }
 
 ShortAnswerQuestion::~ShortAnswerQuestion(){

@@ -4,7 +4,7 @@
 
 bool Question::skipButtonActive = true;
 
-Question::Question(QuestionMode mode):QDialog(nullptr),mode(mode){
+Question::Question(QuestionMode mode):QDialog(nullptr),mode(mode),timer(nullptr){
 
 }
 
@@ -30,10 +30,6 @@ void showMessageBoxForQuestion(QString title , QString Text , QString styleSheet
 }
 
 void Question::showEvent(QShowEvent* event) {
-    this->showEvent(event);
-
-    if(timer)
-        timer->deleteLater();
 
     timer = new Timer(20);
 
@@ -52,19 +48,21 @@ void Question::showEvent(QShowEvent* event) {
             lock_skip_button();
         timer->deleteLater();
     });
+
+    QDialog::showEvent(event);
+
 }
 
 Question::~Question(){
-    delete timer;
 }
 
 bool Question::eventFilter(QObject* obj, QEvent* event) {
     if (event->type() == QEvent::Close) {
 
-        timer->stop();
+        timer->deleteLater();
 
         return true;
     }
 
-    return Question::eventFilter(obj, event);
+    return QDialog::eventFilter(obj, event);
 }

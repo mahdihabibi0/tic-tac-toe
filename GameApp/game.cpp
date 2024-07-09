@@ -63,18 +63,17 @@ bool get_short_answer_question(GameButton *btn,Game* g){
 
 void Game::showEvent(QShowEvent *event)
 {
-    bool (*func[3])(GameButton*,Game*) ={get_multiple_question , get_numerical_question,get_short_answer_question };
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            GameButton* btn = qobject_cast<GameButton*>(ui->h->itemAtPosition(i,j)->widget());
-            btn->setLoc(i,j);
-            while(true){
-                int random = QRandomGenerator::global()->bounded(3);
-                if(func[random](btn,this))
-                    break;
-            }
-        }
-    }
+    // for (int i = 0; i < 3; ++i) {
+    //     for (int j = 0; j < 3; ++j) {
+    //         GameButton *btn =qobject_cast<GameButton*>(this->ui->h->itemAtPosition(i,j)->widget());
+    //         btn->setUpButtonQuestion(QuestionType(map["map"].toArray()[i].toArray()[j].toObject()["type"].toInt()),QuestionMode(map["map"].toArray()[i].toArray()[j].toObject()["mode"].toInt()));
+    //         btn->setLoc(i,j);
+    //         btn->set_situation((Situation)map["map"].toArray()[i].toArray()[j].toObject()["type"].toInt());
+    //     }
+    // }
+    QTimer* gameTimer=new QTimer(this);
+    QObject::connect(gameTimer,SIGNAL(timeout()),this,SLOT(update_timer()));
+    gameTimer->start(1000);
     QDialog::showEvent(event);
 }
 
@@ -123,6 +122,13 @@ void Game::set_back_button_to_normal_handler(int i, int j)
     emit set_back_normal(i , j);
 }
 
+void Game::update_timer()
+{
+    static int seconds = 0;
+    seconds++;
+    ui->Timer->display(seconds);
+}
+
 QJsonObject Game::get_new_question_handler(QuestionType type)
 {
     return emit this->get_question(type);
@@ -154,10 +160,20 @@ void Game::game_drawed()
     create_dialog("Game Drawed");
 }
 
-void Game::start(QString ChallengerName)
+void Game::start(QJsonObject jo)
 {
     ui->player1Username->setText(get_user_name());
-    ui->player2Username->setText(ChallengerName);
+    ui->player2Username->setText(jo["ChallengerName"].toString());
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            GameButton *btn =qobject_cast<GameButton*>(this->ui->h->itemAtPosition(i,j)->widget());
+            btn->setUpButtonQuestion(QuestionType(jo["map"].toArray()[i].toArray()[j].toObject()["type"].toInt()),QuestionMode(jo["map"].toArray()[i].toArray()[j].toObject()["mode"].toInt()));
+            btn->setLoc(i,j);
+            btn->set_situation(Situation(jo["map"].toArray()[i].toArray()[j].toObject()["sit"].toInt()));
+        }
+    }
+
+    this->show();
 }
 
 void Game::play_again_handler()

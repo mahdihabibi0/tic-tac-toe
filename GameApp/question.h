@@ -6,6 +6,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include "timer.h"
+#include "buttonSound.h"
 
 enum QuestionMode{
     normal,
@@ -51,10 +52,6 @@ private:
     static void lock_skip_button();
 
     Timer* timer;
-
-private slots:
-    void send_time();
-
 };
 
 #endif // QUESTION_H

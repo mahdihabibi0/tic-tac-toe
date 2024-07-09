@@ -3,6 +3,8 @@
 #include <QMdiSubWindow>
 #include "timer.h"
 #include "userHandler.h"
+#include "buttonSound.h"
+
 HomePage::HomePage(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::HomePage)
@@ -15,8 +17,9 @@ HomePage::~HomePage()
     delete ui;
 }
 
-void HomePage::start_game(QString ChallengerName){
-    emit show_game_page(ChallengerName);
+void HomePage::start_game(QJsonObject jo){
+
+    emit show_game_page(jo);
 
     this->close();
 }
@@ -47,6 +50,8 @@ void HomePage::showEvent(QShowEvent *event)
 
 void HomePage::on_startGame_clicked()
 {
+    play_normal_button_sound();
+
     if(!emit try_to_start_new_game(get_user_name()))
         return;
 
@@ -59,7 +64,7 @@ void HomePage::on_startGame_clicked()
     waitForPlayer2->show();
 
 
-    QObject::connect(this, SIGNAL(show_game_page(QString)), waitForPlayer2, SLOT(deleteLater()));
+    QObject::connect(this, SIGNAL(show_game_page(QJsonObject)), waitForPlayer2, SLOT(deleteLater()));
 }
 
 
@@ -110,6 +115,8 @@ void create_game_history_page_setting(QDialog *Dialog){
 
 void HomePage::on_gameHistory_clicked()
 {
+    play_normal_button_sound();
+
     QDialog gameHistoryPage;
 
     create_game_history_page_setting(&gameHistoryPage);
@@ -122,6 +129,8 @@ void HomePage::on_gameHistory_clicked()
 
 void HomePage::on_logOut_clicked()
 {
+    play_normal_button_sound();
+
     emit logout();
 
     delete_file_content();

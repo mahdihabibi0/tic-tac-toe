@@ -210,6 +210,8 @@ bool TCPSocketManager::try_to_start_game(QString username){
 
     QObject::connect(this , SIGNAL(readyRead()) , this , SLOT(subserver_read_handeler()));
 
+    qDebug()<< "socket manager say that c" ;
+
     return true;
 }
 
@@ -287,22 +289,18 @@ QJsonObject TCPSocketManager::get_question_by_type(QuestionType type){
 
     this->write(make_json_byte(process));
 
-    QSignalSpy spy(this, SIGNAL(new_question_taken(QJsonObject)));
+    QJsonObject answer;
 
-    int beforCount = spy.count();
+    QEventLoop loop;
 
-    spy.wait(5000); // Wait until the signal fires from subserver_read_handeler
+    QObject::connect(this,&TCPSocketManager::new_question_taken,[&](QJsonObject question){
+        answer = question;
+        loop.quit();
+    });
 
-    if (spy.count() > beforCount) {
-        // Signal was emitted, handle it
-        QList<QVariant> arguments = spy.takeFirst();
-        return arguments.at(0).toJsonObject();
+    loop.exec();
 
-        qDebug() << "resived a qusestion";
-    } else {
-        qDebug() << "noooooo";
-        throw QException();
-    }
+    return answer;
 }
 
 void TCPSocketManager::close_the_program()
@@ -326,7 +324,7 @@ int TCPSocketManager::get_player_statement(QString username)
 void TCPSocketManager::subserver_read_handeler(){
     QJsonObject commandObj = make_byte_json(this->readAll());
 
-    qDebug() << "resived a command";
+    qDebug() << "resived a command : " << commandObj["command"].toString();
 
     CommandOfSubServer command = commands[commandObj["command"].toString()];
 
@@ -341,10 +339,11 @@ void TCPSocketManager::subserver_read_handeler(){
         set_button_situation_handeler(commandObj , Situation::AnsweringByOpponent);
         break;
     case CommandOfSubServer::startTheGame:
-        emit startGame(commandObj["ChallengerName"].toString());
+        emit startGame(commandObj);
         break;
     case CommandOfSubServer::newQuestion:
         emit new_question_taken(commandObj);
+        qDebug()<<"new question signal emitted";
         break;
     case CommandOfSubServer::playerWon:
         emit player_won();
