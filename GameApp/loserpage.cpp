@@ -12,3 +12,10 @@ loserPage::~loserPage()
 {
     delete ui;
 }
+
+void loserPage::on_backToHome_clicked()
+{
+    this->close();
+    emit connect_to_base_server_and_default_login();
+}
+
