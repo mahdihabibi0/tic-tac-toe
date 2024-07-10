@@ -17,18 +17,19 @@ void GameButton::update_the_button(){
         this->setEnabled(false);
         break;
     case Situation::AnsweringByOpponent:
-        this->setText("....");
+        this->setText(". . . .");
+        this->setEnabled(false);
         break;
     case Situation::AnsweringByYou:
         this->setText("");
         this->setEnabled(false);
         break;
     case Situation::AnsweredFalseByYou:
-        this->setText("");
+        this->setText("FALSE");
         this->setEnabled(false);
         break;
     default:
-        this->setText("___");
+        this->setText("_ _ _");
         this->setEnabled(true);
         break;
     }
