@@ -56,6 +56,12 @@ signals:
 
     QJsonObject get_game_map();
 
+    void win();
+
+    void lose();
+
+    void drawed();
+
 private slots:
 
     QJsonObject get_new_question_handler(QuestionType type);

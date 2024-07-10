@@ -85,16 +85,19 @@ void Game::set_button_situation(int i, int j, Situation sit)
 void Game::player_won()
 {
     this->close();
+    emit win();
 }
 
 void Game::player_lose()
 {
     this->close();
+    emit lose();
 }
 
 void Game::game_drawed()
 {
     this->close();
+    emit drawed();
 }
 
 void Game::start(QJsonObject jo)

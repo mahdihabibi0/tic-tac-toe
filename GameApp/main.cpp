@@ -63,17 +63,17 @@ int main(int argc, char *argv[])
 
     QObject::connect(&g , SIGNAL(win()) , &wp , SLOT(show()));
 
-    QObject::connect(&g , SIGNAL(loose()) , &lp , SLOT(show()));
+    QObject::connect(&g , SIGNAL(lose()) , &lp , SLOT(show()));
 
     QObject::connect(&g , SIGNAL(drawed()) , &dp , SLOT(show()));
 
     QObject::connect(&s,SIGNAL(set_button_situation(int,int,Situation)),&g,SLOT(set_button_situation(int,int,Situation)));
 
-    // QObject::connect(&s,SIGNAL(game_drawed()),&g,SLOT(game_drawed()));
+    QObject::connect(&s,SIGNAL(game_drawed()),&g,SLOT(game_drawed()));
 
-    // QObject::connect(&s,SIGNAL(player_won()),&g,SLOT(player_won()));
+    QObject::connect(&s,SIGNAL(player_won()),&g,SLOT(player_won()));
 
-    // QObject::connect(&s,SIGNAL(player_lose()),&g,SLOT(player_lose()));
+    QObject::connect(&s,SIGNAL(player_lose()),&g,SLOT(player_lose()));
 
 
 

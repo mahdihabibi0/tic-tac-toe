@@ -35,6 +35,8 @@ void Question::showEvent(QShowEvent* event) {
 
     QObject::connect(timer, &Timer::time_finished, [&](){
         emit answer_false();
+
+        this->close();
     });
 
     QObject::connect(timer, &Timer::timeout, [&](int time){
