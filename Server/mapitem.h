@@ -11,12 +11,12 @@
 // ( 0 , 0 , 0 )
 // ( 0 , 1 , 0 )
 enum Situation{
-    AnsweredByYou,
     AnsweredByOpponent,
-    Normal,
+    AnsweredFalseByYou,
+    AnsweredByYou,
     AnsweringByOpponent,
-    AnsweringByYou,
-    AnsweredFalseByYou
+    Normal,
+    AnsweringByYou
 };
 
 enum QuestionMode{

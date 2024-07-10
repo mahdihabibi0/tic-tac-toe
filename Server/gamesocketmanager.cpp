@@ -329,6 +329,9 @@ void GameSocketManager::challanger_answered_true(QPair<int,int> loc)
 
 void GameSocketManager::challanger_answering(QPair<int,int> loc)
 {
+    if(map.getSitOfItemAtPosition(loc.first , loc.second) == Situation::AnsweredFalseByYou)
+        return;
+
     qDebug() << "new command : Answering By Opponent form" << username << " to " << loc.first << " , " << loc.second;
 
     socket->write(make_json_byte_for_gamesocket(make_command("Set Button To Answering By Opponent",loc)));
@@ -338,6 +341,9 @@ void GameSocketManager::challanger_answering(QPair<int,int> loc)
 
 void GameSocketManager::challanger_set_button_back_to_normal(QPair<int,int> loc)
 {
+    if(map.getSitOfItemAtPosition(loc.first , loc.second) == Situation::AnsweredFalseByYou)
+        return;
+
     qDebug() << "new command : Normal By Opponent form" << username << " to " << loc.first << " , " << loc.second;
 
     socket->write(make_json_byte_for_gamesocket(make_command("Set Button To Normal By Opponent",loc)));
