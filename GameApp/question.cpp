@@ -35,11 +35,10 @@ void Question::showEvent(QShowEvent* event) {
 
     QObject::connect(timer, &Timer::time_finished, [&](){
         emit answer_false();
-        timer->deleteLater();
     });
 
-    QObject::connect(timer, &Timer::timeout, [&](){
-        emit display_timer(timer->get_rem_time());
+    QObject::connect(timer, &Timer::timeout, [&](int time){
+        emit display_timer(time);
     });
 
     QObject::connect(this , &Question::skiped_clicked , [&](){
@@ -53,16 +52,12 @@ void Question::showEvent(QShowEvent* event) {
 
 }
 
-Question::~Question(){
+void Question::closeEvent(QCloseEvent *event)
+{
+    timer->deleteLater();
+
+    event->accept();
 }
 
-bool Question::eventFilter(QObject* obj, QEvent* event) {
-    if (event->type() == QEvent::Close) {
-
-        timer->deleteLater();
-
-        return true;
-    }
-
-    return QDialog::eventFilter(obj, event);
+Question::~Question(){
 }

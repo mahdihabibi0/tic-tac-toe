@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>302</width>
+    <width>318</width>
     <height>383</height>
    </rect>
   </property>
@@ -16,11 +16,14 @@
   <widget class="QToolButton" name="hidePassword">
    <property name="geometry">
     <rect>
-     <x>230</x>
-     <y>170</y>
+     <x>270</x>
+     <y>160</y>
      <width>31</width>
      <height>31</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-image: url(:/images/3.jpg);</string>
    </property>
    <property name="text">
     <string/>
@@ -35,8 +38,8 @@
   <widget class="QLineEdit" name="passwordInput">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>170</y>
+     <x>100</x>
+     <y>160</y>
      <width>161</width>
      <height>31</height>
     </rect>
@@ -51,8 +54,8 @@
   <widget class="QLineEdit" name="emailInput">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>240</y>
+     <x>100</x>
+     <y>230</y>
      <width>201</width>
      <height>31</height>
     </rect>
@@ -70,6 +73,10 @@
      <height>31</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">font: 9pt &quot;Segoe Print&quot;;
+color: rgb(255, 170, 0);</string>
+   </property>
    <property name="text">
     <string>submit</string>
    </property>
@@ -77,14 +84,19 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>110</x>
+     <x>70</x>
      <y>30</y>
-     <width>121</width>
+     <width>171</width>
      <height>41</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">font: 9pt &quot;Wide Latin&quot;;
+background-color: rgb(0, 255, 127);
+color: rgb(255, 170, 0);</string>
+   </property>
    <property name="text">
-    <string>Signup</string>
+    <string>           Signup</string>
    </property>
   </widget>
   <widget class="QPushButton" name="loginBtn">
@@ -96,6 +108,11 @@
      <height>29</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">font: 9pt &quot;Segoe Print&quot;;
+color: rgb(255, 170, 0);
+</string>
+   </property>
    <property name="text">
     <string>login</string>
    </property>
@@ -103,7 +120,7 @@
   <widget class="QLineEdit" name="usernameInput">
    <property name="geometry">
     <rect>
-     <x>60</x>
+     <x>100</x>
      <y>90</y>
      <width>201</width>
      <height>31</height>
@@ -111,6 +128,54 @@
    </property>
    <property name="clearButtonEnabled">
     <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>89</y>
+     <width>81</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 900 9pt &quot;Segoe UI Black&quot;;</string>
+   </property>
+   <property name="text">
+    <string>User Name</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>160</y>
+     <width>81</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 900 9pt &quot;Segoe UI Black&quot;;</string>
+   </property>
+   <property name="text">
+    <string> Password</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>229</y>
+     <width>81</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 900 9pt &quot;Segoe UI Black&quot;;</string>
+   </property>
+   <property name="text">
+    <string>   Email</string>
    </property>
   </widget>
  </widget>

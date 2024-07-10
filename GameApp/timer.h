@@ -20,6 +20,8 @@ private:
 private slots:
     void time_handler();
 signals:
+    void timeout(int);
+
     void time_finished();
 };
 

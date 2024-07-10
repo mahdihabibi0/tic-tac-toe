@@ -61,6 +61,8 @@ public slots:
 
     int get_player_statement(QString username);
 
+    void user_is_offline();
+
 signals:
     void new_question_taken(QJsonObject Qobj);
 

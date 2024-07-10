@@ -40,19 +40,21 @@ ShortAnswerQuestion::ShortAnswerQuestion(QJsonObject Qobj,QuestionMode mode)
 
 void ShortAnswerQuestion::on_submitBtn_clicked()
 {
-    play_game_button_sound();
+    playNormalSound();
     if(!ui->answerLineEdite->text().size())
         showMessageBoxForQuestion("invalide inputes" , "you should select an answer" , "color : rgba( 255, 0, 0)");
     if(ui->answerLineEdite->text() == answer)
         emit answer_true();
     else
         emit answer_false();
+    this->close();
+    this->deleteLater();
 }
 
 
 void ShortAnswerQuestion::on_skipBtn_clicked()
 {
-    play_normal_button_sound();
+    playNormalSound();
 
     emit skiped_clicked();
 

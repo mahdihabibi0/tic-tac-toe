@@ -29,6 +29,7 @@ void GameButton::update_the_button(){
         break;
     default:
         this->setText("___");
+        this->setEnabled(true);
         break;
     }
 
@@ -72,8 +73,6 @@ void GameButton::set_situation(Situation s)
 void GameButton::answer_true_handeler(){
     situation = Situation::AnsweredByYou;
 
-    delete q;
-
     update_the_button();
 
     emit answered_true_to_question(loc.first , loc.second);
@@ -82,8 +81,6 @@ void GameButton::answer_true_handeler(){
 void GameButton::answer_false_handeler(){
     situation = Situation::AnsweredFalseByYou;
 
-    delete q;
-
     update_the_button();
 
     emit answered_false_to_question(loc.first , loc.second);
@@ -91,12 +88,11 @@ void GameButton::answer_false_handeler(){
 
 void GameButton::skiped_clicked_handeler(){
     emit set_back_button_to_normal(loc.first , loc.second);
+    this->set_situation(Situation::Normal);
 }
 
-
-
 void GameButton::clicked_handeler(bool){
-    play_game_button_sound();
+    playNormalSound();
     if(situation == Situation::AnsweringByOpponent)
         showMessageBoxForQuestion("bad select" , "it is answering\nby your opponent" , "color : rgba(255 , 0 , 0);");
     else{

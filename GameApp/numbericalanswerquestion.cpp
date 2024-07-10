@@ -41,15 +41,17 @@ NumbericalAnswerQuestion::NumbericalAnswerQuestion(QJsonObject Qobj,QuestionMode
 
 void NumbericalAnswerQuestion::on_submitBtn_clicked()
 {
-    play_game_button_sound();
+    playNormalSound();
     if(ui->answerSpinBox->value() == answer)
         emit answer_true();
     else
         emit answer_false();
+    this->close();
+    this->deleteLater();
 }
 
 void NumbericalAnswerQuestion::on_skipBtn_clicked(){
-    play_normal_button_sound();
+    playNormalSound();
 
     skiped_clicked();
 

@@ -321,6 +321,13 @@ int TCPSocketManager::get_player_statement(QString username)
     return this->readAll().toInt();
 }
 
+void TCPSocketManager::user_is_offline()
+{
+    QJsonObject jo;
+    jo.insert("process","Logout");
+    this->write(make_json_byte(jo));
+}
+
 void TCPSocketManager::subserver_read_handeler(){
     QJsonObject commandObj = make_byte_json(this->readAll());
 

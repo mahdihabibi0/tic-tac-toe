@@ -24,6 +24,8 @@ int main(int argc, char *argv[])
 
     QObject::connect(&h , SIGNAL(logout()) , &ls.l , SLOT(show()));
 
+    QObject::connect(&h , SIGNAL(logout()) , &s , SLOT(user_is_offline()));
+
     QObject::connect(&h , SIGNAL(get_statement(QString)) , &s , SLOT(get_player_statement(QString)));
 
     QObject::connect(&h , SIGNAL(try_to_start_new_game(QString)) , &s , SLOT(try_to_start_game(QString)));
@@ -44,7 +46,13 @@ int main(int argc, char *argv[])
 
     QObject::connect(&s,SIGNAL(set_button_situation(int,int,Situation)),&g,SLOT(set_button_situation(int,int,Situation)));
 
-    QObject::connect(&g , SIGNAL(get_game_map()) , &s , SLOT(game_map()));
+    QObject::connect(&s,SIGNAL(game_drawed()),&g,SLOT(game_drawed()));
+
+    QObject::connect(&s,SIGNAL(player_won()),&g,SLOT(player_won()));
+
+    QObject::connect(&s,SIGNAL(player_lose()),&g,SLOT(player_lose()));
+
+
 
     ls.manage();
     return a.exec();

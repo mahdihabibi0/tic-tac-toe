@@ -29,7 +29,7 @@ int GetIpPage::get_port()
 
 void GetIpPage::accept_button()
 {
-    play_normal_button_sound();
+    playNormalSound();
     ipAddress = ui->ipAddress->text();
     port=ui->port->text().toInt();
 

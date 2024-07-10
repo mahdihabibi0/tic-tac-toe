@@ -10,15 +10,24 @@
     <height>340</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="windowTitle">
    <string>Login</string>
+  </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
   </property>
   <widget class="QLineEdit" name="usernameInput">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>80</y>
-     <width>201</width>
+     <x>100</x>
+     <y>90</y>
+     <width>211</width>
      <height>31</height>
     </rect>
    </property>
@@ -41,31 +50,12 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QToolButton" name="hidePassword">
-   <property name="geometry">
-    <rect>
-     <x>250</x>
-     <y>160</y>
-     <width>28</width>
-     <height>27</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="popupMode">
-    <enum>QToolButton::DelayedPopup</enum>
-   </property>
-   <property name="toolButtonStyle">
-    <enum>Qt::ToolButtonIconOnly</enum>
-   </property>
-  </widget>
   <widget class="QLineEdit" name="passwordInput">
    <property name="geometry">
     <rect>
-     <x>70</x>
+     <x>100</x>
      <y>160</y>
-     <width>171</width>
+     <width>181</width>
      <height>31</height>
     </rect>
    </property>
@@ -85,6 +75,10 @@
      <height>29</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">font: 9pt &quot;Segoe Print&quot;;
+color: rgb(255, 170, 0);</string>
+   </property>
    <property name="text">
     <string>submit</string>
    </property>
@@ -98,6 +92,10 @@
      <height>29</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">font: 9pt &quot;Segoe Print&quot;;
+color: rgb(255, 170, 0);</string>
+   </property>
    <property name="text">
     <string>signup</string>
    </property>
@@ -105,14 +103,73 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>110</x>
+     <x>70</x>
      <y>20</y>
-     <width>121</width>
+     <width>201</width>
      <height>51</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">font: 9pt &quot;Wide Latin&quot;;
+background-color: rgb(0, 255, 127);
+color: rgb(255, 0, 0);</string>
+   </property>
    <property name="text">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:20pt; color:#0000ff;&quot;&gt;Login&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>90</y>
+     <width>81</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 900 9pt &quot;Segoe UI Black&quot;;</string>
+   </property>
+   <property name="text">
+    <string>Uesr Name</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>160</y>
+     <width>71</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 900 9pt &quot;Segoe UI Black&quot;;</string>
+   </property>
+   <property name="text">
+    <string>Password</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="hidePassword">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>160</y>
+     <width>31</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>31</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-image: url(:/images/3.jpg);</string>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>
