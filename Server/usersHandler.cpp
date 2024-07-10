@@ -215,3 +215,89 @@ void changeUserSit(QString username, bool s)
 
     qDebug() << "change user situation finished </cs>";
 }
+
+void userWin(QString username , QString challengerName)
+{
+    QJsonObject allFileObj = getFileJson();
+
+    QJsonObject requestedObj = allFileObj[username].toObject();
+
+    requestedObj["score"] = requestedObj["score"].toInt() + 1;
+
+    QJsonArray last3game = requestedObj["last3game"].toArray();
+
+    last3game.push_front(QJsonObject({
+            QPair<QString , QString>("challangername" , challengerName),
+            QPair<QString , QString>("situation" , "win"),
+            QPair<QString , QString>("time" ,QTime::currentTime().toString("hh:mm:ss"))
+        }));
+
+    allFileObj[username] = requestedObj;
+
+    QFile file("users.json");
+
+    file.open(QIODevice::WriteOnly);
+
+    QJsonDocument newJsonDoc = QJsonDocument(allFileObj);
+
+    file.write(QJsonDocument(newJsonDoc).toJson(QJsonDocument::Indented));
+
+    file.close();
+
+}
+
+void userLose(QString username , QString challengerName)
+{
+    QJsonObject allFileObj = getFileJson();
+
+    QJsonObject requestedObj = allFileObj[username].toObject();
+
+    requestedObj["score"] = requestedObj["score"].toInt() - 1;
+
+    QJsonArray last3game = requestedObj["last3game"].toArray();
+
+    last3game.push_front(QJsonObject({
+        QPair<QString , QString>("challangername" , challengerName),
+        QPair<QString , QString>("situation" , "lose"),
+        QPair<QString , QString>("time" ,QTime::currentTime().toString("hh:mm:ss"))
+    }));
+
+    allFileObj[username] = requestedObj;
+
+    QFile file("users.json");
+
+    file.open(QIODevice::WriteOnly);
+
+    QJsonDocument newJsonDoc = QJsonDocument(allFileObj);
+
+    file.write(QJsonDocument(newJsonDoc).toJson(QJsonDocument::Indented));
+
+    file.close();
+}
+
+void userDrawed(QString username, QString challengerName)
+{
+    QJsonObject allFileObj = getFileJson();
+
+    QJsonObject requestedObj = allFileObj[username].toObject();
+
+    QJsonArray last3game = requestedObj["last3game"].toArray();
+
+    last3game.push_front(QJsonObject({
+        QPair<QString , QString>("challangername" , challengerName),
+        QPair<QString , QString>("situation" , "equal"),
+        QPair<QString , QString>("time" ,QTime::currentTime().toString("hh:mm:ss"))
+    }));
+
+    allFileObj[username] = requestedObj;
+
+    QFile file("users.json");
+
+    file.open(QIODevice::WriteOnly);
+
+    QJsonDocument newJsonDoc = QJsonDocument(allFileObj);
+
+    file.write(QJsonDocument(newJsonDoc).toJson(QJsonDocument::Indented));
+
+    file.close();
+}

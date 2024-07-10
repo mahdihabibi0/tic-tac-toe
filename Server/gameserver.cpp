@@ -1,5 +1,6 @@
 #include <QSignalSpy>
 #include "gameserver.h"
+#include "usersHandler.h"
 
 int GameServer::idGen = 0;
 
@@ -7,7 +8,8 @@ GameServer::GameServer(QHostAddress ip) :
     id(idGen++)   ,
     countOfPlayer(0) ,
     gsm1(new GameSocketManager())  ,
-    gsm2(new GameSocketManager())
+    gsm2(new GameSocketManager())   ,
+    mapTime(0)
 {
 
     for (int i = 5000; i < 65535; ++i) {
@@ -18,12 +20,20 @@ GameServer::GameServer(QHostAddress ip) :
 
     qDebug() << "game server created :" <<this->serverAddress() << " : " << this->serverPort();
 
+    QTimer* timer =  new QTimer();
+
+    QObject::connect(timer , &QTimer::timeout , [&](){
+        mapTime++;
+    });
+
+    timer->start(1000);
+
     QObject::connect(this , SIGNAL(newConnection()) , this , SLOT(newConnectionHandler()));
 
     QObject::connect(this,&GameServer::ready_for_start_the_game,[&](){
-        gsm1->start_game(mapStates.getAllMap() , gsm2->get_username());
+        gsm1->start_game(mapTime , mapStates.getAllMap() , gsm2->get_username());
 
-        gsm2->start_game(mapStates.getAllMap() , gsm1->get_username());
+        gsm2->start_game(mapTime , mapStates.getAllMap() , gsm1->get_username());
     });
 
     //game socket manager 1 signals
@@ -41,8 +51,6 @@ GameServer::GameServer(QHostAddress ip) :
 
     QObject::connect(gsm1,SIGNAL(player_answering(QPair<int,int>)),gsm2,SLOT(challanger_answering(QPair<int,int>)));
 
-    QObject::connect(gsm1 , SIGNAL(get_map_states_from_game_server()) , this , SLOT(take_map_states_from_game_server()));
-
     //game socket manager 2 signals
     QObject::connect(gsm2,SIGNAL(username_setted(QString)),this,SLOT(check_user_name(QString)));
 
@@ -57,8 +65,6 @@ GameServer::GameServer(QHostAddress ip) :
     QObject::connect(gsm2,SIGNAL(player_set_button_normal(QPair<int,int>)),gsm1,SLOT(challanger_set_button_back_to_normal(QPair<int,int>)));
 
     QObject::connect(gsm2,SIGNAL(player_answering(QPair<int,int>)),gsm1,SLOT(challanger_answering(QPair<int,int>)));
-
-    QObject::connect(gsm2 , SIGNAL(get_map_states_from_game_server()) , this , SLOT(take_map_states_from_game_server()));
 
 
     QObject::connect(this , &GameServer::destroyed , [&](QObject *){
@@ -124,21 +130,49 @@ int GameServer::getId()
     return id;
 }
 
-//with out impeliment
 void GameServer::checkForGameEqualed()
 {
     if(!(gsm1->getChanceForWin() || gsm1->getChanceForWin()))
-        qDebug() << "game is equal";
+    {
+        gsm1->send_game_equal();
+
+        gsm2->send_game_equal();
+
+        userDrawed(gsm2->get_username(), gsm1->get_username());
+
+        userDrawed(gsm1->get_username(), gsm2->get_username());
+    }
+
 }
-//with out impeliment
+
+
 void GameServer::player1Win(QString name)
 {
     qDebug() << "player " << name <<" win";
+
+    gsm1->send_win();
+
+    gsm2->send_loose();
+
+    userLose(gsm2->get_username(), gsm1->get_username());
+
+    userWin(gsm1->get_username(), gsm2->get_username());
+
 }
+
 //with out impeliment
 void GameServer::player2Win(QString name)
 {
     qDebug() << "player " << name <<" win";
+
+    gsm2->send_win();
+
+    gsm1->send_loose();
+
+    userLose(gsm1->get_username(), gsm2->get_username());
+
+    userWin(gsm2->get_username(), gsm1->get_username());
+
 }
 
 
@@ -187,8 +221,10 @@ void GameServer::newConnectionHandler()
 
 void GameServer::socket_disconnected_handler(QString username)
 {
+    countOfPlayer--;
+
     qDebug()<<"--check for subserver to delete-- :" << id;
-    if(!(gsm1->getActive() || gsm2->getActive()))
+    if(countOfPlayer == 0)
     {
         qDebug()<<"--delete subserver-- :" << id;
 
@@ -216,10 +252,9 @@ void GameServer::socket_disconnected_handler(QString username)
             if(i.key() == username)
             {
                 disconnectedPlayers.erase(i);
+
                 break;
             }
-
-        t->deleteLater();
 
         if(gsm1->getActive())
             emit gsm1->playerWin(gsm1->get_username());

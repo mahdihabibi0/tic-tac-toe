@@ -1,4 +1,5 @@
 #include "MapSituations.h"
+#include <QDebug>
 
 MapSituations::MapSituations() {
     for (int i = 0; i < 3; ++i) {
@@ -31,8 +32,11 @@ void MapSituations::checkForWin()
 {
     for (int i = 0; i < 3; ++i)
         for (int j = 0; j < 3; ++j)
+        {
+            qDebug() << "checking for " << i << "," << j << " wining item that is " << map[i][j].sit;
             if(map[i][j].checkForWin())
                 emit win();
+        }
 }
 
 void MapSituations::checkForWinChance()

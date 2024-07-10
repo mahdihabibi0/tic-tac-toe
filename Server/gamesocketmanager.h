@@ -17,16 +17,22 @@ public:
 
     QString get_username();
 
-    void start_game(QVector<QVector<MapItem>> MapStates ,QString ChallengerName);
+    void start_game(int timer, QVector<QVector<MapItem>> MapStates , QString ChallengerName);
 
     bool getActive();
+
+    void send_win();
+
+    void send_loose();
+
+    void send_game_equal();
 
 private slots:
     void read_handler();
 
     void thereIsNoChanceForWin_handler();
 
-    void win_handler(QString name);
+    void win_handler();
 
     void disconnected_handler();
 
@@ -61,6 +67,7 @@ signals:
 
     void send_username();
 public slots:
+
     void challanger_answered_true(QPair<int,int>);
 
     void challanger_answering(QPair<int,int>);
