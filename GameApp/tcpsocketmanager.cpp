@@ -4,18 +4,21 @@
 #include <QDialog>
 #include <QByteArray>
 #include <QSignalSpy>
-#include "getippage.h"
 // usefull funcks
 
 QJsonObject make_process(QString p){
     QJsonObject process;
+
     process.insert("process" , QJsonValue(p));
+
     return process;
 }
 
 QJsonObject make_process(const QJsonObject& obj , QString p){
     QJsonObject process(obj);
+
     process.insert("process" , QJsonValue(p));
+
     return process;
 }
 
@@ -35,21 +38,6 @@ QJsonObject make_byte_json(const QByteArray& data){
     return jsonObj;
 }
 // before connection
-void failed_connection(){
-
-    QMessageBox msgBox;
-
-    msgBox.setIcon(QMessageBox::Warning);
-
-    msgBox.setWindowTitle("Warning");
-
-    msgBox.setText("server is ofline");
-
-    msgBox.setStandardButtons(QMessageBox::Ok);
-
-    msgBox.exec();
-
-}
 
 void waiting_for_connection(QMessageBox& waitingForServerConnection){
 
@@ -59,25 +47,23 @@ void waiting_for_connection(QMessageBox& waitingForServerConnection){
 
     waitingForServerConnection.setText("wating for server connection");
 
-    // waitingForServerConnection.setWindowFlags(Qt::WindowTitleHint | Qt::FramelessWindowHint);
-
-    waitingForServerConnection.setStandardButtons(QMessageBox::NoButton);
-
-    waitingForServerConnection.exec();
+    waitingForServerConnection.show();
 
 }
 
-void TCPSocketManager::connected_to_server()
+void TCPSocketManager::connected_to_base_server()
 {
-    emit server_is_online();
+    waitingForServerConnection.accept();
 
-    waitingForServerConnection.reject();
+    emit base_server_is_online();
 }
 
 // the constructor
 TCPSocketManager::TCPSocketManager() {
 
-    QObject::connect(this,SIGNAL(connected()),this,SLOT(connected_to_server()));
+    QObject::connect(&waitingForServerConnection,SIGNAL(rejected()),this,SLOT(close_the_program()));
+
+    QObject::connect(this,SIGNAL(connected()),this,SLOT(connected_to_base_server()));
 
     QObject::connect(this,&QTcpSocket::connected,[&](){
         qDebug() << "connected";
@@ -86,8 +72,6 @@ TCPSocketManager::TCPSocketManager() {
     QObject::connect(this,&QTcpSocket::disconnected,[&](){
         qDebug() << "disconnected";
     });
-
-    GetIpPage gip;
 
     QObject::connect(&gip , SIGNAL(rejected()),this,SLOT(close_the_program()));
 
@@ -98,6 +82,15 @@ TCPSocketManager::TCPSocketManager() {
 
     waiting_for_connection(waitingForServerConnection);
 
+}
+
+void TCPSocketManager::connect_to_base_server()
+{
+    QObject::connect(this,SIGNAL(connected()),this,SLOT(connected_to_base_server()));
+
+    this->connectToHost(gip.get_ip_address(),gip.get_port());
+
+    waiting_for_connection(waitingForServerConnection);
 }
 
 
@@ -197,6 +190,8 @@ bool TCPSocketManager::try_to_start_game(QString username){
     QJsonObject ipConfigObj = make_byte_json(this->readAll());
 
     this->close();
+
+    QObject::disconnect(this,SIGNAL(connected()),this,SLOT(connected_to_base_server()));
 
     this->connectToHost(ipConfigObj["ipAddress"].toString() , ipConfigObj["port"].toInt());
 

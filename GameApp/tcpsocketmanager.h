@@ -8,6 +8,8 @@
 #include <QMessageBox>
 #include <QMap>
 #include "gamebutton.h"
+#include "getippage.h"
+
 
 enum CommandOfSubServer{
     setButtonToAnsweringByOpponent,
@@ -29,6 +31,8 @@ class TCPSocketManager : public QTcpSocket
 public:
     TCPSocketManager();
 
+    void connect_to_base_server();
+
 private slots:
     void subserver_read_handeler();
 
@@ -43,7 +47,7 @@ public slots:
 
     bool try_to_start_game(QString username);
 
-    void connected_to_server();
+    void connected_to_base_server();
 
     QJsonObject get_user_information(QString username);
 
@@ -66,7 +70,7 @@ public slots:
 signals:
     void new_question_taken(QJsonObject Qobj);
 
-    void server_is_online();
+    void base_server_is_online();
 
     void set_button_situation(int i,int j,Situation s);
 
@@ -79,6 +83,8 @@ signals:
     void game_drawed();
 
 private:
+    GetIpPage gip;
+
     QMap<QString , CommandOfSubServer> commands;
 
 };

@@ -1,16 +1,33 @@
+#include "drawedpage.h"
 #include "game.h"
+#include "loserpage.h"
 #include "tcpsocketmanager.h"
 #include "homepage.h"
 #include "lsmanager.h"
+#include "winnerpage.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
     TCPSocketManager s;
+
+    loserPage lp;
+
+    winnerPage wp;
+
+    drawedPage dp;
+
     Game g;
+
     HomePage h;
+
     LSManager ls;
+
+    QObject::connect(&s,&TCPSocketManager::base_server_is_online,[&](){
+        ls.manage();
+    });
 
     QObject::connect(&ls , SIGNAL(defult_login_signal(QJsonObject)) , &s , SLOT(try_to_default_login_handler(QJsonObject)));
 
@@ -44,16 +61,29 @@ int main(int argc, char *argv[])
 
     QObject::connect(&g , SIGNAL(set_back_normal(int,int)) , &s , SLOT(subserver_player_set_back_to_normal(int ,int)));
 
+    QObject::connect(&g , SIGNAL(win()) , &wp , SLOT(show()));
+
+    QObject::connect(&g , SIGNAL(loose()) , &lp , SLOT(show()));
+
+    QObject::connect(&g , SIGNAL(drawed()) , &dp , SLOT(show()));
+
     QObject::connect(&s,SIGNAL(set_button_situation(int,int,Situation)),&g,SLOT(set_button_situation(int,int,Situation)));
 
-    QObject::connect(&s,SIGNAL(game_drawed()),&g,SLOT(game_drawed()));
+    // QObject::connect(&s,SIGNAL(game_drawed()),&g,SLOT(game_drawed()));
 
-    QObject::connect(&s,SIGNAL(player_won()),&g,SLOT(player_won()));
+    // QObject::connect(&s,SIGNAL(player_won()),&g,SLOT(player_won()));
 
-    QObject::connect(&s,SIGNAL(player_lose()),&g,SLOT(player_lose()));
+    // QObject::connect(&s,SIGNAL(player_lose()),&g,SLOT(player_lose()));
 
 
 
-    ls.manage();
+    auto backToHomePage = [&](){
+        s.connect_to_base_server();
+    };
+
+    QObject::connect(&lp , &loserPage::connect_to_base_server_and_default_login , backToHomePage);
+    QObject::connect(&wp , &winnerPage::connect_to_base_server_and_default_login , backToHomePage);
+    QObject::connect(&dp , &drawedPage::connect_to_base_server_and_default_login , backToHomePage);
+
     return a.exec();
 }
