@@ -231,7 +231,7 @@ void GameSocketManager::get_new_question_from_http(int type)
 
     loop.exec();
 
-    qDebug() << "   rely of get question is finished";
+    qDebug() << "   reply of get question is finished";
     //the request is fineshed
     qint32 status = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 

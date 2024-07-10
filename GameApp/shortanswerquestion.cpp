@@ -47,6 +47,7 @@ void ShortAnswerQuestion::on_submitBtn_clicked()
         emit answer_true();
     else
         emit answer_false();
+    timer->deleteLater();
     this->close();
     this->deleteLater();
 }
@@ -59,6 +60,8 @@ void ShortAnswerQuestion::on_skipBtn_clicked()
     emit skiped_clicked();
 
     this->close();
+
+    this->deleteLater();
 }
 
 void ShortAnswerQuestion::showEvent(QShowEvent *event)

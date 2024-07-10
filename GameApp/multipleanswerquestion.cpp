@@ -77,9 +77,12 @@ bool MultipleAnswerQuestion::checkAnswer(){
 void MultipleAnswerQuestion::on_skipBtn_clicked()
 {
     playNormalSound();
+
     emit skiped_clicked();
 
     this->close();
+
+    this->deleteLater();
 }
 
 void MultipleAnswerQuestion::showEvent(QShowEvent *event)
@@ -99,7 +102,11 @@ void MultipleAnswerQuestion::on_submitBtn_clicked()
             emit answer_true();
         else
             emit answer_false();
+
         this->close();
+
+        timer->deleteLater();
+
         this->deleteLater();
     } catch (...) {
         showMessageBoxForQuestion("invalide inputes" , "you should select an answer" , "color : rgba( 255, 0, 0)");

@@ -46,16 +46,23 @@ void NumbericalAnswerQuestion::on_submitBtn_clicked()
         emit answer_true();
     else
         emit answer_false();
+
+
+    timer->deleteLater();
+
     this->close();
+
     this->deleteLater();
 }
 
 void NumbericalAnswerQuestion::on_skipBtn_clicked(){
     playNormalSound();
 
-    skiped_clicked();
+    emit skiped_clicked();
 
     this->close();
+
+    this->deleteLater();
 }
 
 void NumbericalAnswerQuestion::showEvent(QShowEvent *event)

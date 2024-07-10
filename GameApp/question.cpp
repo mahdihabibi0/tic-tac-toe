@@ -43,21 +43,18 @@ void Question::showEvent(QShowEvent* event) {
 
     QObject::connect(this , &Question::skiped_clicked , [&](){
         static int count = 0;
+
         if(++count == 2)
             lock_skip_button();
+
         timer->deleteLater();
+
     });
 
     QDialog::showEvent(event);
 
 }
 
-void Question::closeEvent(QCloseEvent *event)
-{
-    timer->deleteLater();
-
-    event->accept();
-}
 
 Question::~Question(){
 }

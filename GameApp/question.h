@@ -48,11 +48,10 @@ protected:
 
     static bool skipButtonActive;
 
-    void closeEvent(QCloseEvent* event) override;
+    Timer* timer;
+
 private:
     static void lock_skip_button();
-
-    Timer* timer;
 };
 
 #endif // QUESTION_H
