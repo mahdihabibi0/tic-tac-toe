@@ -50,7 +50,7 @@ void HomePage::showEvent(QShowEvent *event)
 
 void HomePage::on_startGame_clicked()
 {
-    play_normal_button_sound();
+   playNormalSound();
 
     if(!emit try_to_start_new_game(get_user_name()))
         return;
@@ -115,7 +115,7 @@ void create_game_history_page_setting(QDialog *Dialog){
 
 void HomePage::on_gameHistory_clicked()
 {
-    play_normal_button_sound();
+    playNormalSound();
 
     QDialog gameHistoryPage;
 
@@ -129,7 +129,7 @@ void HomePage::on_gameHistory_clicked()
 
 void HomePage::on_logOut_clicked()
 {
-    play_normal_button_sound();
+    playNormalSound();
 
     emit logout();
 

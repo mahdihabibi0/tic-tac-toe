@@ -27,13 +27,11 @@ public slots:
 
     void game_drawed();
 
-    void lock_skip_button();
-
     void start(QJsonObject);
 private:
     Ui::Game *ui;
 
-    QDialog* winnerPage;
+    QDialog* page;
 
     void create_dialog(QString);
 

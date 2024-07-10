@@ -5,72 +5,12 @@
 #include <QVector>
 #include "userHandler.h"
 
-void Game::create_dialog(QString situation){
-    QLabel *label;
-    QPushButton *playAgain;
-    QPushButton *backHome;
-    winnerPage=new QDialog();
-    winnerPage->resize(800,600);
-    label = new QLabel(winnerPage);
-    label->setObjectName("label");
-    label->setGeometry(QRect(210, 20, 371, 121));
-    label->setText(situation);
-    playAgain = new QPushButton(winnerPage);
-    playAgain->setObjectName("playAgain");
-    playAgain->setGeometry(QRect(320, 330, 151, 71));
-    backHome = new QPushButton(winnerPage);
-    backHome->setObjectName("backHome");
-    backHome->setGeometry(QRect(320, 330, 151, 71));
-    QObject::connect(playAgain,SIGNAL(clicked(bool)),this,SLOT(play_again_handler()));
-    QObject::connect(backHome,SIGNAL(clicked(bool)),this,SLOT(back_to_home_handler()));
-    winnerPage->show();
-
-}
-
 QJsonObject get_http_request_question(QuestionType type,Game* g) {
     return emit g->get_question(type);
 }
 
-bool get_multiple_question(GameButton *btn,Game* g){
-    static QVector<QuestionMode> vector={QuestionMode::bomb,QuestionMode::bomb,QuestionMode::normal,QuestionMode::normal,QuestionMode::normal,QuestionMode::king};
-    if(vector.size()==0)
-        return false;
-    int modeIndex = QRandomGenerator::global()->bounded(vector.size());
-    btn->setUpButtonQuestion(QuestionType::Multiple,vector[modeIndex]);
-    vector.erase(vector.begin()+ modeIndex);
-    return true;
-}
-
-bool get_numerical_question(GameButton *btn,Game* g){
-    static QVector<QuestionMode> vector={QuestionMode::normal};
-    if(vector.size()==0)
-        return false;
-    int modeIndex = QRandomGenerator::global()->bounded(vector.size());
-    btn->setUpButtonQuestion(QuestionType::Numerical,vector[modeIndex]);
-    vector.erase(vector.begin()+ modeIndex);
-    return true;
-}
-
-bool get_short_answer_question(GameButton *btn,Game* g){
-    static QVector<QuestionMode> vector={QuestionMode::bomb,QuestionMode::normal};
-    if(vector.size()==0)
-        return false;
-    int modeIndex = QRandomGenerator::global()->bounded(vector.size());
-    btn->setUpButtonQuestion(QuestionType::Short,vector[modeIndex]);
-    vector.erase(vector.begin()+ modeIndex);
-    return true;
-}
-
 void Game::showEvent(QShowEvent *event)
 {
-    // for (int i = 0; i < 3; ++i) {
-    //     for (int j = 0; j < 3; ++j) {
-    //         GameButton *btn =qobject_cast<GameButton*>(this->ui->h->itemAtPosition(i,j)->widget());
-    //         btn->setUpButtonQuestion(QuestionType(map["map"].toArray()[i].toArray()[j].toObject()["type"].toInt()),QuestionMode(map["map"].toArray()[i].toArray()[j].toObject()["mode"].toInt()));
-    //         btn->setLoc(i,j);
-    //         btn->set_situation((Situation)map["map"].toArray()[i].toArray()[j].toObject()["type"].toInt());
-    //     }
-    // }
     QTimer* gameTimer=new QTimer(this);
     QObject::connect(gameTimer,SIGNAL(timeout()),this,SLOT(update_timer()));
     gameTimer->start(1000);
@@ -145,19 +85,16 @@ void Game::set_button_situation(int i, int j, Situation sit)
 void Game::player_won()
 {
     this->close();
-    create_dialog("You Won");
 }
 
 void Game::player_lose()
 {
     this->close();
-    create_dialog("You Lose");
 }
 
 void Game::game_drawed()
 {
     this->close();
-    create_dialog("Game Drawed");
 }
 
 void Game::start(QJsonObject jo)
@@ -174,17 +111,6 @@ void Game::start(QJsonObject jo)
     }
 
     this->show();
-}
-
-void Game::play_again_handler()
-{
-    this->show();
-}
-
-void Game::back_to_home_handler()
-{
-    delete winnerPage;
-    emit show_home_page();
 }
 
 

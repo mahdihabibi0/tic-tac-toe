@@ -1,10 +1,8 @@
 #ifndef BUTTONSOUND_H
 #define BUTTONSOUND_H
 
-#include <QSoundEffect>
+void playNormalSound();
 
-void play_normal_button_sound();
-
-void play_game_button_sound();
+void playPup();
 
 #endif // BUTTONSOUND_H

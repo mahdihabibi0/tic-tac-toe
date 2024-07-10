@@ -44,7 +44,7 @@ bool SignupPage::check_inputs(){
 
 void SignupPage::on_submitBtn_clicked()
 {
-    play_normal_button_sound();
+    playNormalSound();
 
     if(!check_inputs())
 
@@ -74,22 +74,24 @@ void SignupPage::on_submitBtn_clicked()
 
 void SignupPage::on_hidePassword_clicked()
 {
-    play_normal_button_sound();
+    playNormalSound();
 
-    if(ui->passwordInput->echoMode() == QLineEdit::Password)
+    if(ui->passwordInput->echoMode() == QLineEdit::Password){
 
         ui->passwordInput->setEchoMode(QLineEdit::Normal);
-
-    else
-
+        ui->hidePassword->setStyleSheet("border-image: url(:/images/2.jpg);");
+    }
+    else{
         ui->passwordInput->setEchoMode(QLineEdit::Password);
+        ui->hidePassword->setStyleSheet("border-image: url(:/images/3.jpg);");
+    }
 
 }
 
 
 void SignupPage::on_loginBtn_clicked()
 {
-    play_normal_button_sound();
+    playNormalSound();
 
     emit loginButton_clicked();
 }
