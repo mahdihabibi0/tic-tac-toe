@@ -20,6 +20,9 @@ private slots:
 
 private:
     Ui::winnerPage *ui;
+
+signals:
+    void connect_to_base_server_and_default_login();
 };
 
 #endif // WINNERPAGE_H

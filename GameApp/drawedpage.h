@@ -15,8 +15,13 @@ public:
     explicit drawedPage(QWidget *parent = nullptr);
     ~drawedPage();
 
+private slots:
+    void on_backToHome_clicked();
+
 private:
     Ui::drawedPage *ui;
+signals:
+    void connect_to_base_server_and_default_login();
 };
 
 #endif // DRAWEDPAGE_H
