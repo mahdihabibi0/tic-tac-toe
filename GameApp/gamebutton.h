@@ -4,12 +4,12 @@
 #include <QPushButton>
 #include "question.h"
 enum Situation{
-    AnsweredByYou,
     AnsweredByOpponent,
-    Normal,
+    AnsweredFalseByYou,
+    AnsweredByYou,
     AnsweringByOpponent,
-    AnsweringByYou,
-    AnsweredFalseByYou
+    Normal,
+    AnsweringByYou
 };
 
 class GameButton :public QPushButton
