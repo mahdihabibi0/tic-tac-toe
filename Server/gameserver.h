@@ -39,6 +39,8 @@ private:
     QMap<QString , Timer*> disconnectedPlayers;
 
     MapStatements mapStates;
+
+    int mapTime;
 private slots:
     void checkForGameEqualed();
 

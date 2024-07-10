@@ -20,4 +20,10 @@ bool try_to_default_login(QJsonObject requestForObj);
 
 void changeUserSit(QString username , bool s);
 
+void userWin(QString username , QString challengerNam);
+
+void userLose(QString username , QString challengerNam);
+
+void userDrawed(QString username , QString challengerName);
+
 #endif // USERSHANDLER_H

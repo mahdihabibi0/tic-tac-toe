@@ -28,6 +28,12 @@ QJsonObject make_command(QString command,QPair<int,int> loc){
     return jo;
 }
 
+QJsonObject make_command(QString command){
+    QJsonObject jo;
+    jo.insert("command",command);
+    return jo;
+}
+
 QJsonObject make_byte_json(const QByteArray& data){
     QJsonDocument jsonDoc = QJsonDocument::fromJson(data);
 
@@ -41,6 +47,8 @@ GameSocketManager::GameSocketManager():
     chanceForWin(true),
     Active(false)
     {
+    QObject::connect(&map , SIGNAL(win()) , this , SLOT(win_handler()));
+
     QObject::connect(&map , SIGNAL(thereIsNoChanceForWin()) , this , SLOT(thereIsNoChanceForWin_handler()));
 }
 
@@ -141,9 +149,9 @@ void GameSocketManager::thereIsNoChanceForWin_handler()
     emit noChanceForWin();
 }
 
-void GameSocketManager::win_handler(QString name)
+void GameSocketManager::win_handler()
 {
-    emit playerWin(name);
+    emit playerWin(username);
 }
 
 void GameSocketManager::disconnected_handler()
@@ -165,7 +173,7 @@ void GameSocketManager::disconnected_handler()
     qDebug()<<"socket of " << username <<" deleted";
 }
 
-void GameSocketManager::start_game(QVector<QVector<MapItem>> MapStates , QString ChallengerName)
+void GameSocketManager::start_game(int timer , QVector<QVector<MapItem>> MapStates , QString ChallengerName)
 {
     QJsonObject startGame;
 
@@ -174,6 +182,8 @@ void GameSocketManager::start_game(QVector<QVector<MapItem>> MapStates , QString
     startGame.insert("ChallengerName",ChallengerName);
 
     startGame.insert("map" , get_map(MapStates));
+
+    startGame.insert("timer" , timer);
 
     socket->write(make_json_byte_for_gamesocket(startGame));
 
@@ -285,6 +295,27 @@ QJsonArray GameSocketManager::get_map(QVector<QVector<MapItem>> MapStates)
     show_sendedMap(mapArr);
 
     return mapArr;
+}
+
+void GameSocketManager::send_win()
+{
+    qDebug() << "new command : Player Won " << username;
+
+    socket->write(make_json_byte_for_gamesocket(make_command("Player Won")));
+}
+
+void GameSocketManager::send_loose()
+{
+    qDebug() << "new command : Player Lose " << username;
+
+    socket->write(make_json_byte_for_gamesocket(make_command("Player Lose")));
+}
+
+void GameSocketManager::send_game_equal()
+{
+    qDebug() << "new command : Game Drawed " << username;
+
+    socket->write(make_json_byte_for_gamesocket(make_command("Game Drawed")));
 }
 
 void GameSocketManager::challanger_answered_true(QPair<int,int> loc)

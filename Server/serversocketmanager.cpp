@@ -137,6 +137,13 @@ void ServerSocketManager::read_handler()
         }
     }
 
+    else if(process=="Logout"){
+
+        changeUserSit(username , false);
+
+        username = "";
+    }
+
     qDebug() << "process : " << process << " form " << username << " finished </bp>";
 
 }
