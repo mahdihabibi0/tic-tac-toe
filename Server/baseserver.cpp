@@ -77,7 +77,8 @@ QJsonObject BaseServer::start_game_requested(QString username)
     QObject::connect(gs , &GameServer::GameDestroyed , [&](int id){
         qDebug()<< "--fined subserver in baseserver vector-- : " << id;
 
-        gameservers.erase(gameservers.find(id));
+        if(gameservers.find(id) != gameservers.end())
+            gameservers.erase(gameservers.find(id));
 
         qDebug()<<"--subserver : " << id << " in vector deleted--";
     });

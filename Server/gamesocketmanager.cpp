@@ -97,6 +97,7 @@ void GameSocketManager::read_handler()
 
         if(map.wined || mapstates[location.first][location.second].mode == QuestionMode::king){
             send_win();
+
             GameFinished = true;
         }
         //emit for secound player to set his own map
@@ -161,16 +162,6 @@ void GameSocketManager::read_handler()
             changeUserSit(username , true);
             qDebug() << "user " << username << " is online now";
         }
-    }
-
-    if(GameFinished){
-        emit game_finished();
-
-        QObject::disconnect(socket , SIGNAL(disconnected()) , this , SLOT(disconnected_handler()));
-
-        socket->deleteLater();
-
-        this->deleteLater();
     }
 
     qDebug() << "process : " << processStr << " form " << username << " finished";
@@ -352,15 +343,6 @@ void GameSocketManager::send_game_equal()
     socket->write(make_json_byte_for_gamesocket(make_command("Game Drawed")));
 }
 
-void GameSocketManager::finish_the_game()
-{
-    QObject::disconnect(socket , SIGNAL(disconnected()) , this , SLOT(disconnected_handler()));
-
-    socket->deleteLater();
-
-    this->deleteLater();
-}
-
 void GameSocketManager::challanger_answered_true(QPair<int,int> loc)
 {
     qDebug() << "new command : Answered By Opponen form" << username << " to " << loc.first << " , " << loc.second;
@@ -390,12 +372,12 @@ void GameSocketManager::challanger_answering(QPair<int,int> loc)
 
 void GameSocketManager::challanger_set_button_back_to_normal(QPair<int,int> loc)
 {
-    if(map.getSitOfItemAtPosition(loc.first , loc.second) == Situation::AnsweredFalseByYou)
-        return;
-
     if(emit checkForDrwed()){
         send_game_equal();
 
+        return;
+    }
+    if(map.getSitOfItemAtPosition(loc.first , loc.second) == Situation::AnsweredFalseByYou){
         return;
     }
 

@@ -49,17 +49,6 @@ GameServer::GameServer(QHostAddress ip) :
         gsm1->send_win();
     });
 
-    QObject::connect(gsm1,&GameSocketManager::game_finished,[&](){
-
-
-
-        gsm1->finish_the_game();
-
-        emit GameDestroyed(id);
-
-        this->deleteLater();
-    });
-
     QObject::connect(gsm1,SIGNAL(playerWin()),this,SLOT(player1Win()));
 
     QObject::connect(gsm1,SIGNAL(playerLose()),this,SLOT(player1Lose()));
@@ -247,6 +236,8 @@ void GameServer::newConnectionHandler()
 void GameServer::socket_disconnected_handler(QString username)
 {
     countOfPlayer--;
+
+    changeUserSit(username , false);
 
     qDebug()<<"--check for subserver to delete-- :" << id;
     if(countOfPlayer == 0)
