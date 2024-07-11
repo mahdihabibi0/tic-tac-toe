@@ -39,11 +39,30 @@ GameServer::GameServer(QHostAddress ip) :
     //game socket manager 1 signals
     QObject::connect(gsm1,SIGNAL(username_setted(QString)),this,SLOT(check_user_name(QString)));
 
-    QObject::connect(gsm1,SIGNAL(noChanceForWin()),this,SLOT(checkForGameEqualed()));
+    QObject::connect(gsm2 , &GameSocketManager::checkForDrwed , [&]()->bool{
+        if(!(gsm1->getChanceForWin() || gsm2->getChanceForWin()))
+            return true;
+        return false;
+    });
 
-    QObject::connect(gsm1,SIGNAL(playerWin(QString)),this,SLOT(player1Win(QString)));
+    QObject::connect(gsm2 , &GameSocketManager::send_to_challenger_win , [&]()->void{
+        gsm1->send_win();
+    });
 
-    QObject::connect(gsm1,SIGNAL(playerLose()),this,SLOT(player1Lose(QString)));
+    QObject::connect(gsm1,&GameSocketManager::game_finished,[&](){
+
+
+
+        gsm1->finish_the_game();
+
+        emit GameDestroyed(id);
+
+        this->deleteLater();
+    });
+
+    QObject::connect(gsm1,SIGNAL(playerWin()),this,SLOT(player1Win()));
+
+    QObject::connect(gsm1,SIGNAL(playerLose()),this,SLOT(player1Lose()));
 
     QObject::connect(gsm1,SIGNAL(disconnected(QString)),this,SLOT(socket_disconnected_handler(QString)));
 
@@ -56,11 +75,19 @@ GameServer::GameServer(QHostAddress ip) :
     //game socket manager 2 signals
     QObject::connect(gsm2,SIGNAL(username_setted(QString)),this,SLOT(check_user_name(QString)));
 
-    QObject::connect(gsm2,SIGNAL(noChanceForWin()),this,SLOT(checkForGameEqualed()));
+    QObject::connect(gsm1 , &GameSocketManager::checkForDrwed , [&]()->bool{
+        if(!(gsm1->getChanceForWin() || gsm2->getChanceForWin()))
+            return true;
+        return false;
+    });
 
-    QObject::connect(gsm2,SIGNAL(playerWin(QString)),this,SLOT(player2Win(QString)));
+    QObject::connect(gsm1 , &GameSocketManager::send_to_challenger_win , [&]()->void{
+        gsm2->send_win();
+    });
 
-    QObject::connect(gsm2,SIGNAL(playerLose()),this,SLOT(player2Lose(QString)));
+    QObject::connect(gsm2,SIGNAL(playerWin()),this,SLOT(player2Win()));
+
+    QObject::connect(gsm2,SIGNAL(playerLose()),this,SLOT(player2Lose()));
 
     QObject::connect(gsm2,SIGNAL(disconnected(QString)),this,SLOT(socket_disconnected_handler(QString)));
 
@@ -150,25 +177,25 @@ void GameServer::checkForGameEqualed()
 }
 
 
-void GameServer::player1Win(QString name)
+void GameServer::player1Win()
 {
     userWin(gsm1->get_username(), gsm2->get_username());
 }
 
 //with out impeliment
-void GameServer::player2Win(QString name)
+void GameServer::player2Win()
 {
 
     userWin(gsm2->get_username(), gsm1->get_username());
 
 }
 
-void GameServer::player1Lose(QString name)
+void GameServer::player1Lose()
 {
     userLose(gsm1->get_username(), gsm2->get_username());
 }
 
-void GameServer::player2Lose(QString name)
+void GameServer::player2Lose()
 {
 
     userLose(gsm2->get_username(), gsm1->get_username());

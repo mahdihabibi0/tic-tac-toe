@@ -47,10 +47,6 @@ GameSocketManager::GameSocketManager():
     chanceForWin(true),
     Active(false)
     {
-    QObject::connect(&map , SIGNAL(win()) , this , SLOT(win_handler()));
-
-    QObject::connect(&map , SIGNAL(lose()) , this , SLOT(lose_handler()));
-
     QObject::connect(&map , SIGNAL(thereIsNoChanceForWin()) , this , SLOT(thereIsNoChanceForWin_handler()));
 }
 
@@ -89,22 +85,48 @@ void GameSocketManager::read_handler()
 
     QString processStr = processObj["process"].toString();
 
+    bool GameFinished = false;
+
     qDebug() << "new process : " << processStr << " form " << username << " starrted";
 
     //Answered True process
     if(processStr == "Answered True To Question"){
-        //emit for secound player to set his own map
-        emit player_answered_true(location);
+
         //set the situation in our map
         map.setItemAtPosition(location.first,location.second,Situation::AnsweredByYou);
+
+        if(map.wined || mapstates[location.first][location.second].mode == QuestionMode::king){
+            send_win();
+            GameFinished = true;
+        }
+        //emit for secound player to set his own map
+        emit player_answered_true(location);
     }
 
     //Answered false process
     else if(processStr == "Answered False To Question"){
-        //emit for secound player to set his own map
-        emit player_set_button_normal(location);
+
         //set the situation in our map
         map.setItemAtPosition(location.first,location.second,Situation::AnsweredFalseByYou);
+
+        if(map.losed || mapstates[location.first][location.second].mode == QuestionMode::bomb){
+            send_lose();
+
+            emit send_to_challenger_win();
+
+            GameFinished = true;
+
+        }
+
+        else{
+            if(emit checkForDrwed()){
+                send_game_equal();
+
+                GameFinished = true;
+            }
+            //emit for secound player to set his own map
+            emit player_set_button_normal(location);
+        }
     }
 
     //Answering to a question process
@@ -141,28 +163,22 @@ void GameSocketManager::read_handler()
         }
     }
 
+    if(GameFinished){
+        emit game_finished();
+
+        QObject::disconnect(socket , SIGNAL(disconnected()) , this , SLOT(disconnected_handler()));
+
+        socket->deleteLater();
+
+        this->deleteLater();
+    }
+
     qDebug() << "process : " << processStr << " form " << username << " finished";
 }
 
 void GameSocketManager::thereIsNoChanceForWin_handler()
 {
     this->chanceForWin = false;
-
-    emit noChanceForWin();
-}
-
-void GameSocketManager::win_handler()
-{
-    send_win();
-
-    emit playerWin();
-}
-
-void GameSocketManager::lose_handler()
-{
-    send_lose();
-
-    emit playerLose();
 }
 
 void GameSocketManager::disconnected_handler()
@@ -293,12 +309,15 @@ QJsonArray GameSocketManager::get_map(QVector<QVector<MapItem>> MapStates)
 
     for (int i = 0; i < 3; ++i){
         QJsonArray row;
+        QVector<MapItem> row1;
+        mapstates.push_back(row1);
         for (int j = 0; j < 3; ++j) {
             row.append(QJsonObject({
                 QPair<QString , QJsonValue>("type" , MapStates[i][j].type),
                 QPair<QString , QJsonValue>("mode" , MapStates[i][j].mode),
                 QPair<QString , QJsonValue>("sit" , map.getSitOfItemAtPosition(i , j))
             }));
+            mapstates[i].push_back(MapStates[i][j]);
         }
         mapArr.append(QJsonValue(row));
     }
@@ -313,15 +332,17 @@ void GameSocketManager::send_win()
     qDebug() << "new command : Player Won " << username;
 
     socket->write(make_json_byte_for_gamesocket(make_command("Player Won")));
+
+    emit playerWin();
 }
 
 void GameSocketManager::send_lose()
 {
     qDebug() << "new command : Player Lose " << username;
 
-    QThread::msleep(1000);
-
     socket->write(make_json_byte_for_gamesocket(make_command("Player Lose")));
+
+    emit playerLose();
 }
 
 void GameSocketManager::send_game_equal()
@@ -331,13 +352,28 @@ void GameSocketManager::send_game_equal()
     socket->write(make_json_byte_for_gamesocket(make_command("Game Drawed")));
 }
 
+void GameSocketManager::finish_the_game()
+{
+    QObject::disconnect(socket , SIGNAL(disconnected()) , this , SLOT(disconnected_handler()));
+
+    socket->deleteLater();
+
+    this->deleteLater();
+}
+
 void GameSocketManager::challanger_answered_true(QPair<int,int> loc)
 {
     qDebug() << "new command : Answered By Opponen form" << username << " to " << loc.first << " , " << loc.second;
 
-    socket->write(make_json_byte_for_gamesocket(make_command("Set Button To Answered By Opponent",loc)));
-
     map.setItemAtPosition(loc.first,loc.second,Situation::AnsweredByOpponent);
+
+    if(map.losed || mapstates[loc.first][loc.second].mode == QuestionMode::king )
+        send_lose();
+
+    else {
+        socket->write(make_json_byte_for_gamesocket(make_command("Set Button To Answered By Opponent",loc)));
+    }
+
 }
 
 void GameSocketManager::challanger_answering(QPair<int,int> loc)
@@ -356,6 +392,12 @@ void GameSocketManager::challanger_set_button_back_to_normal(QPair<int,int> loc)
 {
     if(map.getSitOfItemAtPosition(loc.first , loc.second) == Situation::AnsweredFalseByYou)
         return;
+
+    if(emit checkForDrwed()){
+        send_game_equal();
+
+        return;
+    }
 
     qDebug() << "new command : Normal By Opponent form" << username << " to " << loc.first << " , " << loc.second;
 

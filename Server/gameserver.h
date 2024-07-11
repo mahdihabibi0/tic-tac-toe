@@ -44,13 +44,13 @@ private:
 private slots:
     void checkForGameEqualed();
 
-    void player1Win(QString name);
+    void player1Win();
 
-    void player2Win(QString name);
+    void player2Win();
 
-    void player1Lose(QString name);
+    void player1Lose();
 
-    void player2Lose(QString name);
+    void player2Lose();
 
     bool check_user_name(QString username);
 

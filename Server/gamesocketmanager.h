@@ -27,14 +27,11 @@ public:
 
     void send_game_equal();
 
+    void finish_the_game();
 private slots:
     void read_handler();
 
     void thereIsNoChanceForWin_handler();
-
-    void win_handler();
-
-    void lose_handler();
 
     void disconnected_handler();
 
@@ -52,24 +49,30 @@ private:
     QJsonArray get_map(QVector<QVector<MapItem> > MapStates);
     //this value is false when socket is null or disconnected
     bool Active;
+
+    QVector<QVector<MapItem>> mapstates;
 signals:
+    bool send_to_challenger_win();
+
+    bool checkForDrwed();
+
     void player_answered_true(QPair<int,int>);
 
     void player_set_button_normal(QPair<int,int>);
 
     void player_answering(QPair<int,int>);
 
-    void noChanceForWin();
-
-    void playerWin();
-
-    void playerLose();
-
     bool username_setted(QString username);
 
     void disconnected(QString username);
 
     void send_username();
+
+    void playerWin();
+
+    void playerLose();
+
+    void game_finished();
 public slots:
 
     void challanger_answered_true(QPair<int,int>);

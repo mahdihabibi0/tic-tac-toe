@@ -18,6 +18,7 @@ SOURCES += \
     main.cpp \
     mapitem.cpp \
     mapstatements.cpp \
+    servermanager.cpp \
     serversocketmanager.cpp \
     timer.cpp \
     usersHandler.cpp
@@ -30,12 +31,14 @@ HEADERS += \
     getippage.h \
     mapitem.h \
     mapstatements.h \
+    servermanager.h \
     serversocketmanager.h \
     timer.h \
     usersHandler.h
 
 FORMS += \
-    getippage.ui
+    getippage.ui \
+    servermanager.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

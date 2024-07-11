@@ -8,10 +8,6 @@ class MapSituations : public QObject
 {
     Q_OBJECT
 signals:
-    void win();
-
-    void lose();
-
     void thereIsNoChanceForWin();
 public:
     MapSituations();
@@ -19,6 +15,12 @@ public:
     void setItemAtPosition(int i , int j , Situation sit);
 
     Situation getSitOfItemAtPosition(int i , int j);
+
+    bool wined;
+
+    bool losed;
+
+    bool chanceForWin;
 
 private:
     bool getChancForWin();
