@@ -8,6 +8,7 @@
 #include <QWidget>
 #include <QTableWidget>
 #include <QMessageBox>
+#include <QJsonObject>
 
 namespace Ui {
 class HomePage;
@@ -44,6 +45,8 @@ signals:
     bool try_to_start_new_game(QString);
 
     void show_game_page(QJsonObject);
+
+    QJsonObject update_user_information(QString);
 
 };
 

@@ -9,27 +9,27 @@ void GameButton::update_the_button(){
 
     switch (situation) {
     case Situation::AnsweredByYou:
-        this->setText("X");
+        this->setStyleSheet("border-image: url(:/images/x.jpg);");
         this->setEnabled(false);
         break;
     case Situation::AnsweredByOpponent:
-        this->setText("O");
+        this->setStyleSheet("border-image: url(:/images/o.jpg);");
         this->setEnabled(false);
         break;
     case Situation::AnsweringByOpponent:
-        this->setText(". . . .");
-        this->setEnabled(false);
+        this->setStyleSheet("border-image: url(:/images/busy.jpg);");
+        this->setEnabled(true);
         break;
     case Situation::AnsweringByYou:
-        this->setText("");
+        this->setStyleSheet("border-image: url(:/images/question.jpg);");
         this->setEnabled(false);
         break;
     case Situation::AnsweredFalseByYou:
-        this->setText("FALSE");
+        this->setStyleSheet("border-image: url(:/images/lock.jpg);");
         this->setEnabled(false);
         break;
     default:
-        this->setText("_ _ _");
+        this->setStyleSheet("border-image: url(:/images/line.jpg);");
         this->setEnabled(true);
         break;
     }

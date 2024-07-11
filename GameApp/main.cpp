@@ -75,6 +75,8 @@ int main(int argc, char *argv[])
 
     QObject::connect(&s,SIGNAL(player_lose()),&g,SLOT(player_lose()));
 
+    QObject::connect(&h,SIGNAL(update_user_information(QString)),&s,SLOT(get_user_information(QString)));
+
 
 
     auto backToHomePage = [&](){

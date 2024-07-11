@@ -324,7 +324,9 @@ void TCPSocketManager::user_is_offline()
 }
 
 void TCPSocketManager::subserver_read_handeler(){
-    QJsonObject commandObj = make_byte_json(this->readAll());
+    QByteArray s = this->readAll();
+
+    QJsonObject commandObj = make_byte_json(s);
 
     qDebug() << "resived a command : " << commandObj["command"].toString();
 
