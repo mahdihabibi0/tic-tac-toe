@@ -18,7 +18,7 @@ public:
 
     int  request_for_rem_time_of_game(QString username);
 
-    void  waitFor(QString);
+    void waitFor(QString);
 
     int getId();
 private:
@@ -47,6 +47,10 @@ private slots:
     void player1Win(QString name);
 
     void player2Win(QString name);
+
+    void player1Lose(QString name);
+
+    void player2Lose(QString name);
 
     bool check_user_name(QString username);
 

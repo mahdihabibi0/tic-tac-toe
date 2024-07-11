@@ -23,7 +23,7 @@ public:
 
     void send_win();
 
-    void send_loose();
+    void send_lose();
 
     void send_game_equal();
 
@@ -33,6 +33,8 @@ private slots:
     void thereIsNoChanceForWin_handler();
 
     void win_handler();
+
+    void lose_handler();
 
     void disconnected_handler();
 
@@ -59,7 +61,9 @@ signals:
 
     void noChanceForWin();
 
-    void playerWin(QString name);
+    void playerWin();
+
+    void playerLose();
 
     bool username_setted(QString username);
 

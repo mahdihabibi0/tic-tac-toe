@@ -49,6 +49,8 @@ GameSocketManager::GameSocketManager():
     {
     QObject::connect(&map , SIGNAL(win()) , this , SLOT(win_handler()));
 
+    QObject::connect(&map , SIGNAL(lose()) , this , SLOT(lose_handler()));
+
     QObject::connect(&map , SIGNAL(thereIsNoChanceForWin()) , this , SLOT(thereIsNoChanceForWin_handler()));
 }
 
@@ -151,7 +153,16 @@ void GameSocketManager::thereIsNoChanceForWin_handler()
 
 void GameSocketManager::win_handler()
 {
-    emit playerWin(username);
+    send_win();
+
+    emit playerWin();
+}
+
+void GameSocketManager::lose_handler()
+{
+    send_lose();
+
+    emit playerLose();
 }
 
 void GameSocketManager::disconnected_handler()
@@ -304,9 +315,11 @@ void GameSocketManager::send_win()
     socket->write(make_json_byte_for_gamesocket(make_command("Player Won")));
 }
 
-void GameSocketManager::send_loose()
+void GameSocketManager::send_lose()
 {
     qDebug() << "new command : Player Lose " << username;
+
+    QThread::msleep(1000);
 
     socket->write(make_json_byte_for_gamesocket(make_command("Player Lose")));
 }

@@ -43,6 +43,8 @@ GameServer::GameServer(QHostAddress ip) :
 
     QObject::connect(gsm1,SIGNAL(playerWin(QString)),this,SLOT(player1Win(QString)));
 
+    QObject::connect(gsm1,SIGNAL(playerLose()),this,SLOT(player1Lose(QString)));
+
     QObject::connect(gsm1,SIGNAL(disconnected(QString)),this,SLOT(socket_disconnected_handler(QString)));
 
     QObject::connect(gsm1,SIGNAL(player_answered_true(QPair<int,int>)),gsm2,SLOT(challanger_answered_true(QPair<int,int>)));
@@ -57,6 +59,8 @@ GameServer::GameServer(QHostAddress ip) :
     QObject::connect(gsm2,SIGNAL(noChanceForWin()),this,SLOT(checkForGameEqualed()));
 
     QObject::connect(gsm2,SIGNAL(playerWin(QString)),this,SLOT(player2Win(QString)));
+
+    QObject::connect(gsm2,SIGNAL(playerLose()),this,SLOT(player2Lose(QString)));
 
     QObject::connect(gsm2,SIGNAL(disconnected(QString)),this,SLOT(socket_disconnected_handler(QString)));
 
@@ -148,33 +152,27 @@ void GameServer::checkForGameEqualed()
 
 void GameServer::player1Win(QString name)
 {
-    qDebug() << "player " << name <<" win";
-
-    gsm1->send_win();
-
-    gsm2->send_loose();
-
-    userLose(gsm2->get_username(), gsm1->get_username());
-
     userWin(gsm1->get_username(), gsm2->get_username());
-
 }
 
 //with out impeliment
 void GameServer::player2Win(QString name)
 {
-    qDebug() << "player " << name <<" win";
-
-    gsm2->send_win();
-
-    gsm1->send_loose();
-
-    userLose(gsm1->get_username(), gsm2->get_username());
 
     userWin(gsm2->get_username(), gsm1->get_username());
 
 }
 
+void GameServer::player1Lose(QString name)
+{
+    userLose(gsm1->get_username(), gsm2->get_username());
+}
+
+void GameServer::player2Lose(QString name)
+{
+
+    userLose(gsm2->get_username(), gsm1->get_username());
+}
 
 bool GameServer::check_user_name(QString username)
 {
@@ -257,10 +255,10 @@ void GameServer::socket_disconnected_handler(QString username)
             }
 
         if(gsm1->getActive())
-            emit gsm1->playerWin(gsm1->get_username());
+            emit gsm1->send_win();
 
         if(gsm2->getActive())
-            emit gsm2->playerWin(gsm2->get_username());
+            emit gsm2->send_win();
 
         qDebug()<<"--delete subserver-- :" << id;
 

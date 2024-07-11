@@ -48,6 +48,8 @@ struct MapItem
 
     bool checkForWin();
 
+    bool checkForLose();
+
     bool checkForWinChance();
 
     MapItem* left;

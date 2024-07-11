@@ -21,6 +21,7 @@ void MapSituations::setItemAtPosition(int i, int j, Situation sit)
     map[i][j].sit = sit;
     checkForWinChance();
     checkForWin();
+    checkForLose();
 }
 
 Situation MapSituations::getSitOfItemAtPosition(int i, int j)
@@ -36,6 +37,17 @@ void MapSituations::checkForWin()
             qDebug() << "checking for " << i << "," << j << " wining item that is " << map[i][j].sit;
             if(map[i][j].checkForWin())
                 emit win();
+        }
+}
+
+void MapSituations::checkForLose()
+{
+    for (int i = 0; i < 3; ++i)
+        for (int j = 0; j < 3; ++j)
+        {
+            qDebug() << "checking for " << i << "," << j << " losing item that is " << map[i][j].sit;
+            if(map[i][j].checkForLose())
+                emit lose();
         }
 }
 

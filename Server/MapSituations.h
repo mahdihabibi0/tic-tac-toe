@@ -10,6 +10,8 @@ class MapSituations : public QObject
 signals:
     void win();
 
+    void lose();
+
     void thereIsNoChanceForWin();
 public:
     MapSituations();
@@ -24,6 +26,8 @@ private:
     void checkForWinChance();
 
     void checkForWin();
+
+    void checkForLose();
 
     QVector<QVector<MapItem>> map;
 };
