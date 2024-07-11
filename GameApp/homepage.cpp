@@ -27,6 +27,17 @@ void HomePage::start_game(QJsonObject jo){
 void HomePage::showEvent(QShowEvent *event)
 {
 
+    QJsonObject jo = emit update_user_information(get_user_name());
+    QFile jsonFile("user.json");
+
+    QJsonDocument jsonDoc(jo);
+
+    if(jsonFile.open(QFile::WriteOnly))
+    {
+        jsonFile.write(QJsonDocument(jsonDoc).toJson(QJsonDocument::Indented));
+
+        jsonFile.close();
+    }
 
     int rem = emit get_statement(get_user_name());
 
