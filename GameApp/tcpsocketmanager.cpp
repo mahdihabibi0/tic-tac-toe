@@ -326,20 +326,7 @@ void TCPSocketManager::user_is_offline()
 void TCPSocketManager::subserver_read_handeler(){
     QByteArray s = this->readAll();
 
-    qDebug () << s;
-    if(s.count("command") == 2 && s.size() == 140){
-        emit player_won();
-        return;
-    }
-
-    if(s.count("command") == 2 ){
-        emit game_drawed();
-        return;
-    }
-
     QJsonObject commandObj = make_byte_json(s);
-
-    qDebug() << s.size();
 
     qDebug() << "resived a command : " << commandObj["command"].toString();
 
