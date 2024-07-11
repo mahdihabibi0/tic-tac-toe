@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>2.jpg</file>
+        <file>3.jpg</file>
+        <file>signup.jpg</file>
+        <file>login.jpg</file>
+        <file>x.jpg</file>
+        <file>o.jpg</file>
+        <file>busy.jpg</file>
+        <file>line.jpg</file>
+        <file>question.jpg</file>
+        <file>lock.jpg</file>
+    </qresource>
+    <qresource prefix="/sounds">
+        <file>normal.wav</file>
+        <file>popular.wav</file>
+    </qresource>
+</RCC>
