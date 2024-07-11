@@ -114,11 +114,11 @@ bool GameServer::requestForNewConection(QString username)
     if(disconnectedPlayers.size() != 0)
         return false;
 
-    QSignalSpy spy(this, SIGNAL(newConnection()));
+    // QSignalSpy spy(this, SIGNAL(newConnection()));
 
-    int count = spy.count();
+    // int count = spy.count();
 
-    if(count >= 2)
+    if(countOfPlayer >= 2)
     {
         return false;
     }
