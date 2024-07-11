@@ -93,7 +93,7 @@ void GameButton::skiped_clicked_handeler(){
 }
 
 void GameButton::clicked_handeler(bool){
-    playNormalSound();
+    playPup();
     if(situation == Situation::AnsweringByOpponent)
         showMessageBoxForQuestion("bad select" , "it is answering\nby your opponent" , "color : rgba(255 , 0 , 0);");
     else{

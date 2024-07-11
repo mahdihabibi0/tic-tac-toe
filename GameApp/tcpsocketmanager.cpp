@@ -86,6 +86,8 @@ TCPSocketManager::TCPSocketManager() {
 
 void TCPSocketManager::connect_to_base_server()
 {
+    this->close();
+
     QObject::connect(this,SIGNAL(connected()),this,SLOT(connected_to_base_server()));
 
     this->connectToHost(gip.get_ip_address(),gip.get_port());
