@@ -232,6 +232,8 @@ void userWin(QString username , QString challengerName)
             QPair<QString , QString>("time" ,QTime::currentTime().toString("hh:mm:ss"))
         }));
 
+    requestedObj["last3game"] = last3game;
+
     allFileObj[username] = requestedObj;
 
     QFile file("users.json");
@@ -254,11 +256,13 @@ void userLose(QString username , QString challengerName)
 
     QJsonArray last3game = requestedObj["last3game"].toArray();
 
-    last3game.push_front(QJsonObject({
+    last3game.prepend(QJsonObject({
         QPair<QString , QString>("challangername" , challengerName),
         QPair<QString , QString>("situation" , "lose"),
         QPair<QString , QString>("time" ,QTime::currentTime().toString("hh:mm:ss"))
     }));
+
+    requestedObj["last3game"] = last3game;
 
     allFileObj[username] = requestedObj;
 
@@ -286,6 +290,8 @@ void userDrawed(QString username, QString challengerName)
         QPair<QString , QString>("situation" , "equal"),
         QPair<QString , QString>("time" ,QTime::currentTime().toString("hh:mm:ss"))
     }));
+
+    requestedObj["last3game"] = last3game;
 
     allFileObj[username] = requestedObj;
 
