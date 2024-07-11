@@ -11,9 +11,8 @@ QJsonObject get_http_request_question(QuestionType type,Game* g) {
 
 void Game::showEvent(QShowEvent *event)
 {
-    QTimer* gameTimer=new QTimer(this);
-    QObject::connect(gameTimer,SIGNAL(timeout()),this,SLOT(update_timer()));
-    gameTimer->start(1000);
+    QObject::connect(&gameTimer,SIGNAL(timeout()),this,SLOT(update_timer()));
+    gameTimer.start(1000);
     QDialog::showEvent(event);
 }
 
@@ -64,9 +63,8 @@ void Game::set_back_button_to_normal_handler(int i, int j)
 
 void Game::update_timer()
 {
-    static int seconds = 0;
-    seconds++;
-    ui->Timer->display(seconds);
+    timer++;
+    ui->Timer->display(timer);
 }
 
 QJsonObject Game::get_new_question_handler(QuestionType type)
@@ -104,6 +102,7 @@ void Game::start(QJsonObject jo)
 {
     ui->player1Username->setText(get_user_name());
     ui->player2Username->setText(jo["ChallengerName"].toString());
+    timer = (jo["timer"].toInt());
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 3; ++j) {
             GameButton *btn =qobject_cast<GameButton*>(this->ui->h->itemAtPosition(i,j)->widget());

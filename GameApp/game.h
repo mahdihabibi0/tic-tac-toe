@@ -29,6 +29,10 @@ public slots:
 
     void start(QJsonObject);
 private:
+    int timer;
+
+    QTimer gameTimer;
+
     Ui::Game *ui;
 
     QDialog* page;

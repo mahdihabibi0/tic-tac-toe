@@ -90,6 +90,8 @@ void TCPSocketManager::connect_to_base_server()
 
     QObject::connect(this,SIGNAL(connected()),this,SLOT(connected_to_base_server()));
 
+    QObject::disconnect(this,SIGNAL(readyRead()),this,SLOT(subserver_read_handeler()));
+
     this->connectToHost(gip.get_ip_address(),gip.get_port());
 
     waiting_for_connection(waitingForServerConnection);
